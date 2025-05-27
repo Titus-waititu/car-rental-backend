@@ -1,0 +1,15 @@
+@url = http://localhost:8000
+
+###
+GET {{url}}/admins?search=kamau
+###
+POST {{url}}/admins
+Content-Type: application/json
+
+{
+    "admin_id":1,
+    "username":"Kamau",
+    "password":"1234",
+    "email":"kamaa@gmail.com",
+    "last_login":"2025-05-23"
+}
