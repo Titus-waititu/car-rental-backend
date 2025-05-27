@@ -1,7 +1,7 @@
 @url = http://localhost:8000
 
 ###
-GET {{url}}/admins?search=kamau
+GET {{url}}/admins
 ###
 POST {{url}}/admins
 Content-Type: application/json
