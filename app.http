@@ -1,4 +1,4 @@
-@url = http://localhost:8000
+@url = https://car-rental-backend-1-5axa.onrender.com
 
 ###
 GET {{url}}/admins

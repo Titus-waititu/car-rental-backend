@@ -11,23 +11,75 @@ export class GuestUsersService {
     @InjectRepository(GuestUser)
     private guestRepository: Repository<GuestUser>,
   ) {}
-  create(createGuestUserDto: CreateGuestUserDto) {
-    return 'This action adds a new guestUser';
+  async create(createGuestUserDto: CreateGuestUserDto) {
+    return await this.guestRepository
+      .save(createGuestUserDto)
+      .then((guestUser) => {
+        return guestUser;
+      })
+      .catch((error) => {
+        console.error('Error creating guest user:', error);
+        throw new Error('Failed to create guest user.');
+      });
   }
 
-  findAll() {
-    return `This action returns all guestUsers`;
+  async findAll() {
+    return await this.guestRepository
+      .find()
+      .then((guestUsers) => {
+        if (guestUsers.length === 0) {
+          return 'No guest users found.';
+        }
+        return guestUsers;
+      })
+      .catch((error) => {
+        console.error('Error retrieving guest users:', error);
+        throw new Error('Failed to retrieve guest users.');
+      });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} guestUser`;
+  async findOne(id: number) {
+    return await this.guestRepository
+      .findOne({ where: { guest_id: id } })
+      .then((guestUser) => {
+        if (!guestUser) {
+          return `Guest user with ID ${id} not found.`;
+        }
+        return guestUser;
+      })
+      .catch((error) => {
+        console.error('Error retrieving guest user:', error);
+        throw new Error(`Failed to retrieve guest user with ID ${id}.`);
+      });
   }
 
-  update(id: number, updateGuestUserDto: UpdateGuestUserDto) {
-    return `This action updates a #${id} guestUser`;
+  async update(id: number, updateGuestUserDto: UpdateGuestUserDto) {
+    return await this.guestRepository
+      .update(id, updateGuestUserDto)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `Guest user with ID ${id} not found or no changes made.`;
+        }
+        return `Guest user with ID ${id} updated successfully.`;
+      })
+      .catch((error) => {
+        console.error('Error updating guest user:', error);
+        throw new Error(`Failed to update guest user with ID ${id}.`);
+      });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} guestUser`;
+  async remove(id: number) {
+    return await this.guestRepository
+      .delete(id)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `Guest user with ID ${id} not found.`;
+        }
+        return `Guest user with ID ${id} removed successfully.`;
+      })
+      .catch((error) => {
+        console.error('Error removing guest user:', error);
+        throw new Error(`Failed to remove guest user with ID ${id}.`);
+      });
   }
 }

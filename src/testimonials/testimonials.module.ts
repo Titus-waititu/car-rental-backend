@@ -4,9 +4,10 @@ import { TestimonialsController } from './testimonials.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Testimonial } from './entities/testimonial.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Testimonial])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Testimonial,User])],
   controllers: [TestimonialsController],
   providers: [TestimonialsService],
 })

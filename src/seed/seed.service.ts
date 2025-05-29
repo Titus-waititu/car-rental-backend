@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { User, UserStatus } from 'src/users/entities/user.entity';
 import { Admin } from 'src/admins/entities/admin.entity';
@@ -20,60 +20,45 @@ import { Payment } from 'src/payments/entities/payment.entity';
 @Injectable()
 export class SeedService {
   private readonly logger = new Logger(SeedService.name);
+
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Admin)
-    private readonly adminRepository: Repository<Admin>,
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Admin) private readonly adminRepo: Repository<Admin>,
     @InjectRepository(GuestUser)
-    private readonly guestUserRepository: Repository<GuestUser>,
-    @InjectRepository(Rating)
-    private readonly ratingRepository: Repository<Rating>,
+    private readonly guestUserRepo: Repository<GuestUser>,
+    @InjectRepository(Rating) private readonly ratingRepo: Repository<Rating>,
     @InjectRepository(Subscriber)
-    private readonly subscriberRepository: Repository<Subscriber>,
+    private readonly subscriberRepo: Repository<Subscriber>,
     @InjectRepository(Testimonial)
-    private readonly testimonialRepository: Repository<Testimonial>,
+    private readonly testimonialRepo: Repository<Testimonial>,
     @InjectRepository(Vehicle)
-    private readonly vehicleRepository: Repository<Vehicle>,
+    private readonly vehicleRepo: Repository<Vehicle>,
     @InjectRepository(VehicleBrand)
-    private readonly vehicleBrandRepository: Repository<VehicleBrand>,
+    private readonly vehicleBrandRepo: Repository<VehicleBrand>,
     @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
+    private readonly paymentRepo: Repository<Payment>,
     @InjectRepository(Booking)
-    private readonly bookingRepository: Repository<Booking>,
+    private readonly bookingRepo: Repository<Booking>,
     @InjectRepository(ContactUsQuery)
-    private readonly contactUsQueryRepository: Repository<ContactUsQuery>,
+    private readonly contactUsQueryRepo: Repository<ContactUsQuery>,
   ) {}
 
   async seed() {
-    this.logger.log('Seeding database...');
-
-    // Clear existing data
-    // await this.userRepository.clear();
-    // await this.adminRepository.clear();
-    // await this.guestUserRepository.clear();
-    // await this.ratingRepository.clear();
-    // await this.subscriberRepository.clear();
-    // await this.testimonialRepository.clear();
-    // await this.vehicleRepository.clear();
-    // await this.vehicleBrandRepository.clear();
-    // await this.paymentRepository.clear();
-    // await this.bookingRepository.clear();
-    // await this.contactUsQueryRepository.clear();
-    this.logger.log('Existing data cleared.');
+    this.logger.log('Starting database seeding...');
 
     // Seed Vehicle Brands
     for (let i = 0; i < 5; i++) {
-      const vehicleBrand = this.vehicleBrandRepository.create({
+      const brand = this.vehicleBrandRepo.create({
         brand_name: faker.vehicle.manufacturer(),
         created_at: faker.date.past(),
       });
-      await this.vehicleBrandRepository.save(vehicleBrand);
-      this.logger.log(`Vehicle Brand ${i + 1} seeded successfully.`);
+      await this.vehicleBrandRepo.save(brand);
+      this.logger.log(`Seeded Vehicle Brand #${i + 1}`);
     }
+
     // Seed Users
     for (let i = 0; i < 10; i++) {
-      const user = this.userRepository.create({
+      const user = this.userRepo.create({
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         email: faker.internet.email(),
@@ -86,111 +71,82 @@ export class SeedService {
         ]),
         last_login: faker.date.past(),
       });
-      await this.userRepository.save(user);
+      await this.userRepo.save(user);
     }
-    this.logger.log('Users seeded successfully.');
+    this.logger.log('Seeded Users');
 
     // Seed Admins
     for (let i = 0; i < 5; i++) {
-      const admin = this.adminRepository.create({
+      const admin = this.adminRepo.create({
         username: faker.person.fullName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
         last_login: faker.date.past(),
       });
-      await this.adminRepository.save(admin);
+      await this.adminRepo.save(admin);
     }
-    this.logger.log('Admins seeded successfully.');
+    this.logger.log('Seeded Admins');
 
     // Seed Guest Users
     for (let i = 0; i < 10; i++) {
-      const guestUser = this.guestUserRepository.create({
+      const guest = this.guestUserRepo.create({
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         email: faker.internet.email(),
         phone_number: faker.phone.number(),
       });
-      await this.guestUserRepository.save(guestUser);
-      this.logger.log('Database seeding completed successfully.');
+      await this.guestUserRepo.save(guest);
     }
+    this.logger.log('Seeded Guest Users');
 
-    //seed vehicles
-    const allVehicleBrands = await this.vehicleBrandRepository.find({
-      order: { brand_id: 'ASC' },
-    });
+    // Seed Vehicles
+    const allBrands = await this.vehicleBrandRepo.find();
     for (let i = 0; i < 10; i++) {
-      const randomIndex = faker.number.int({
-        min: 0,
-        max: allVehicleBrands.length - 1,
-      });
-      const vehicleBrand = allVehicleBrands[randomIndex];
-
-      const vehicle = this.vehicleRepository.create({
-        vehicle_brand: vehicleBrand,
+      const brand = faker.helpers.arrayElement(allBrands);
+      const vehicle = this.vehicleRepo.create({
+        vehicle_brand: brand,
         model: faker.vehicle.model(),
         color: faker.color.human(),
         price_per_day: faker.number.int({ min: 50, max: 500 }),
         availability: faker.datatype.boolean(),
         created_at: faker.date.past(),
       });
-      await this.vehicleRepository.save(vehicle);
-      this.logger.log(`Vehicle ${i + 1} seeded successfully.`);
+      await this.vehicleRepo.save(vehicle);
     }
+    this.logger.log('Seeded Vehicles');
 
     // Seed Ratings
-
-    const allUsers = await this.userRepository.find();
-    const allVehicles = await this.vehicleRepository.find();
+    const allUsers = await this.userRepo.find();
+    const allVehicles = await this.vehicleRepo.find();
     for (let i = 0; i < 20; i++) {
-      const randomUserIndex = faker.number.int({
-        min: 0,
-        max: allUsers.length - 1,
-      });
-      const randomVehicleIndex = faker.number.int({
-        min: 0,
-        max: allVehicles.length - 1,
-      });
-
-      const rating = this.ratingRepository.create({
-        user: allUsers[randomUserIndex],
-        vehicle: allVehicles[randomVehicleIndex],
+      const rating = this.ratingRepo.create({
+        user: faker.helpers.arrayElement(allUsers),
+        vehicle: faker.helpers.arrayElement(allVehicles),
         rating_value: faker.number.int({ min: 1, max: 5 }),
         review: faker.lorem.sentence(),
         created_at: faker.date.past(),
       });
-      await this.ratingRepository.save(rating);
-      this.logger.log(`Rating ${i + 1} seeded successfully.`);
+      await this.ratingRepo.save(rating);
     }
+    this.logger.log('Seeded Ratings');
 
     // Seed Subscribers
-    const allGuestUsers = await this.guestUserRepository.find();
+    const allGuests = await this.guestUserRepo.find();
     for (let i = 0; i < 10; i++) {
-      const randomGuestUserIndex = faker.number.int({
-        min: 0,
-        max: allGuestUsers.length - 1,
-      });
-      const randomUserIndex = faker.number.int({
-        min: 0,
-        max: allUsers.length - 1,
-      });
-      const subscriber = this.subscriberRepository.create({
-        user: allUsers[randomUserIndex],
-        guestUser: allGuestUsers[randomGuestUserIndex],
-        email: faker.internet.email(),
+      const subscriber = this.subscriberRepo.create({
+        user: faker.helpers.arrayElement(allUsers),
+        guestUser: faker.helpers.arrayElement(allGuests),
+        email: faker.helpers.unique(faker.internet.email),
         subscribed_at: faker.date.past(),
       });
-      await this.subscriberRepository.save(subscriber);
-      this.logger.log(`Subscriber ${i + 1} seeded successfully.`);
+      await this.subscriberRepo.save(subscriber);
     }
+    this.logger.log('Seeded Subscribers');
 
     // Seed Testimonials
     for (let i = 0; i < 10; i++) {
-      const randomUserIndex = faker.number.int({
-        min: 0,
-        max: allUsers.length - 1,
-      });
-      const testimonial = this.testimonialRepository.create({
-        user: allUsers[randomUserIndex],
+      const testimonial = this.testimonialRepo.create({
+        user: faker.helpers.arrayElement(allUsers),
         testimonial: faker.lorem.sentence(),
         status: faker.helpers.arrayElement([
           TestimonialStatus.active,
@@ -198,38 +154,10 @@ export class SeedService {
         ]),
         created_at: faker.date.past(),
       });
-      await this.testimonialRepository.save(testimonial);
-      this.logger.log(`Testimonial ${i + 1} seeded successfully.`);
+      await this.testimonialRepo.save(testimonial);
     }
+    this.logger.log('Seeded Testimonials');
 
-    //seed Payments
-    //payment has one to one relationship with booking and user
-    // const allBookings = await this.bookingRepository.find();
-    // const allUsersForPayment = await this.userRepository.find();
-    // for (let i = 0; i < 10; i++) {}
-
-    // Seed Bookings
-    // if (allUsersForPayment.length === 0 || allVehicles.length === 0) {
-    //   this.logger.error('Users or Vehicles not found. Cannot seed bookings.');
-    //   return;
-    // }
-
-    // for (let i = 0; i < 10; i++) {
-    //   const randomUser = faker.helpers.arrayElement(allUsersForPayment);
-    //   const randomVehicle = faker.helpers.arrayElement(allVehicles);
-
-    //   const booking = this.bookingRepository.create({
-    //     user: randomUser,
-    //     vehicle: randomVehicle,
-    //     payment: null, // Payment will be created later
-    //     booking_date: faker.date.past(),
-    //     return_date: faker.date.future(),
-    //     total_amount: faker.number.int({ min: 100, max: 1000 }),
-    //     status: faker.helpers.arrayElement(['pending', 'confirmed', 'cancelled']),
-    //   });
-
-    //   await this.bookingRepository.save(booking);
-    //   this.logger.log(`Booking ${i + 1} seeded successfully.`);
-    // }
+    this.logger.log('Database seeding completed!');
   }
 }

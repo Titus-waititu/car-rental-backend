@@ -2,7 +2,7 @@ import { IsBoolean, IsDateString, IsNumber, IsString } from 'class-validator';
 
 export class CreateVehicleDto {
   @IsNumber()
-  vehicle_brand: number;
+  vehicle_brandId: number;
 
   @IsString()
   model: string;
