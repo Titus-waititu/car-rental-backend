@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Subscriber } from './entities/subscriber.entity';
 
 @Module({
-  imports:[DatabaseModule,TypeOrmModule.forFeature([Subscriber])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Subscriber])],
   controllers: [SubscribersController],
   providers: [SubscribersService],
 })

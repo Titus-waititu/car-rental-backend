@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContactUsQuery } from './entities/contact_us_query.entity';
 
 @Module({
-  imports:[DatabaseModule,TypeOrmModule.forFeature([ContactUsQuery])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([ContactUsQuery])],
   controllers: [ContactUsQueriesController],
   providers: [ContactUsQueriesService],
 })

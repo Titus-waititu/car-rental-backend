@@ -15,7 +15,21 @@ import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Admin,Booking,ContactUsQuery,GuestUser,Payment,Rating,Subscriber,Testimonial,User,VehicleBrand,Vehicle])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Admin,
+      Booking,
+      ContactUsQuery,
+      GuestUser,
+      Payment,
+      Rating,
+      Subscriber,
+      Testimonial,
+      User,
+      VehicleBrand,
+      Vehicle,
+    ]),
+  ],
   controllers: [SeedController],
   providers: [SeedService],
 })

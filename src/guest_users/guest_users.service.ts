@@ -8,9 +8,9 @@ import { GuestUser } from './entities/guest_user.entity';
 @Injectable()
 export class GuestUsersService {
   constructor(
-      @InjectRepository(GuestUser)
-      private guestRepository: Repository<GuestUser>,
-    ) {}
+    @InjectRepository(GuestUser)
+    private guestRepository: Repository<GuestUser>,
+  ) {}
   create(createGuestUserDto: CreateGuestUserDto) {
     return 'This action adds a new guestUser';
   }

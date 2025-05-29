@@ -208,29 +208,28 @@ export class SeedService {
     // const allUsersForPayment = await this.userRepository.find();
     // for (let i = 0; i < 10; i++) {}
 
- // Seed Bookings
-// if (allUsersForPayment.length === 0 || allVehicles.length === 0) {
-//   this.logger.error('Users or Vehicles not found. Cannot seed bookings.');
-//   return;
-// }
+    // Seed Bookings
+    // if (allUsersForPayment.length === 0 || allVehicles.length === 0) {
+    //   this.logger.error('Users or Vehicles not found. Cannot seed bookings.');
+    //   return;
+    // }
 
-// for (let i = 0; i < 10; i++) {
-//   const randomUser = faker.helpers.arrayElement(allUsersForPayment);
-//   const randomVehicle = faker.helpers.arrayElement(allVehicles);
+    // for (let i = 0; i < 10; i++) {
+    //   const randomUser = faker.helpers.arrayElement(allUsersForPayment);
+    //   const randomVehicle = faker.helpers.arrayElement(allVehicles);
 
-//   const booking = this.bookingRepository.create({
-//     user: randomUser,
-//     vehicle: randomVehicle,
-//     payment: null, // Payment will be created later
-//     booking_date: faker.date.past(),
-//     return_date: faker.date.future(),
-//     total_amount: faker.number.int({ min: 100, max: 1000 }),
-//     status: faker.helpers.arrayElement(['pending', 'confirmed', 'cancelled']),
-//   });
+    //   const booking = this.bookingRepository.create({
+    //     user: randomUser,
+    //     vehicle: randomVehicle,
+    //     payment: null, // Payment will be created later
+    //     booking_date: faker.date.past(),
+    //     return_date: faker.date.future(),
+    //     total_amount: faker.number.int({ min: 100, max: 1000 }),
+    //     status: faker.helpers.arrayElement(['pending', 'confirmed', 'cancelled']),
+    //   });
 
-//   await this.bookingRepository.save(booking);
-//   this.logger.log(`Booking ${i + 1} seeded successfully.`);
-// }
-
+    //   await this.bookingRepository.save(booking);
+    //   this.logger.log(`Booking ${i + 1} seeded successfully.`);
+    // }
   }
 }

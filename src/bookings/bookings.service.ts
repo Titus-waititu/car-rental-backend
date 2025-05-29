@@ -8,67 +8,73 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class BookingsService {
   constructor(
-    @InjectRepository(Booking) private bookingRepository:Repository<Booking>
-  ){}
+    @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
+  ) {}
   async create(createBookingDto: CreateBookingDto) {
-    return await this.bookingRepository.save(createBookingDto).then((booking)=>{
-      return booking;
-    })
+    return await this.bookingRepository
+      .save(createBookingDto)
+      .then((booking) => {
+        return booking;
+      });
   }
 
   async findAll() {
-    return await this.bookingRepository.find().then((bookings)=>{
-      if (bookings.length === 0) {
-        return 'No bookings found';
-      }
-      return bookings;
-    }
-    ).catch((error)=>{
-      console.error('Error fetching bookings:', error);
-      throw new Error('Failed to fetch bookings');
-    }
-    );
+    return await this.bookingRepository
+      .find()
+      .then((bookings) => {
+        if (bookings.length === 0) {
+          return 'No bookings found';
+        }
+        return bookings;
+      })
+      .catch((error) => {
+        console.error('Error fetching bookings:', error);
+        throw new Error('Failed to fetch bookings');
+      });
   }
 
   async findOne(booking_id: number) {
-    return await this.bookingRepository.findOneBy({booking_id}).then((booking)=>{
-      if (!booking) {
-        return `Booking with ID ${booking_id} not found`;
-      }
-      return booking;
-    }
-    ).catch((error)=>{
-      console.error('Error fetching booking:', error);
-      throw new Error(`Failed to fetch booking with ID ${booking_id}`);
-    }
-    );
+    return await this.bookingRepository
+      .findOneBy({ booking_id })
+      .then((booking) => {
+        if (!booking) {
+          return `Booking with ID ${booking_id} not found`;
+        }
+        return booking;
+      })
+      .catch((error) => {
+        console.error('Error fetching booking:', error);
+        throw new Error(`Failed to fetch booking with ID ${booking_id}`);
+      });
   }
 
   async update(id: number, updateBookingDto: UpdateBookingDto) {
-    return await this.bookingRepository.update(id, updateBookingDto).then((result)=>{
-      if (result.affected === 0) {
-        return `Booking with ID ${id} not found`;
-      }
-      return `Booking with ID ${id} updated successfully`;
-    }
-    ).catch((error)=>{
-      console.error('Error updating booking:', error);
-      throw new Error(`Failed to update booking with ID ${id}`);
-    }
-    );
+    return await this.bookingRepository
+      .update(id, updateBookingDto)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `Booking with ID ${id} not found`;
+        }
+        return `Booking with ID ${id} updated successfully`;
+      })
+      .catch((error) => {
+        console.error('Error updating booking:', error);
+        throw new Error(`Failed to update booking with ID ${id}`);
+      });
   }
 
   async remove(id: number) {
-    return await this.bookingRepository.delete(id).then((result)=>{
-      if (result.affected === 0) {
-        return `Booking with ID ${id} not found`;
-      }
-      return `Booking with ID ${id} deleted successfully`;
-    }
-    ).catch((error)=>{
-      console.error('Error deleting booking:', error);
-      throw new Error(`Failed to delete booking with ID ${id}`);
-    }
-    );
+    return await this.bookingRepository
+      .delete(id)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `Booking with ID ${id} not found`;
+        }
+        return `Booking with ID ${id} deleted successfully`;
+      })
+      .catch((error) => {
+        console.error('Error deleting booking:', error);
+        throw new Error(`Failed to delete booking with ID ${id}`);
+      });
   }
 }

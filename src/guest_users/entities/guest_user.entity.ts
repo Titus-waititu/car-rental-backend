@@ -13,7 +13,7 @@ export class GuestUser {
   @PrimaryGeneratedColumn()
   guest_id: number;
 
-  @Column({unique:true})
+  @Column({ unique: true })
   email: string;
 
   @Column()
