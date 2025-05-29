@@ -18,6 +18,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         // entities:[User,Admin,Booking,ContactUsQuery,GuestUser,Payment,Rating,Subscriber,Testimonial,VehicleBrand,Vehicle],
         synchronize: configService.getOrThrow<boolean>('DB_SYNC', true),
         logging: configService.getOrThrow<boolean>('DB_LOGGING', false),
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
       inject: [ConfigService],
     }),

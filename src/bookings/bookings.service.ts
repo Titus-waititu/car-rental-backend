@@ -17,7 +17,17 @@ export class BookingsService {
   }
 
   findAll() {
-    return `This action returns all bookings`;
+    return this.bookingRepository.find().then((bookings)=>{
+      if (bookings.length === 0) {
+        return 'No bookings found';
+      }
+      return bookings;
+    }
+    ).catch((error)=>{
+      console.error('Error fetching bookings:', error);
+      throw new Error('Failed to fetch bookings');
+    }
+    );
   }
 
   findOne(id: number) {
