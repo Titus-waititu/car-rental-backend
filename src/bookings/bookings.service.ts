@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Booking } from './entities/booking.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BookingsService {
-  create(createBookingDto: CreateBookingDto) {
-    return 'This action adds a new booking';
+  constructor(
+    @InjectRepository(Booking) private bookingRepository:Repository<Booking>
+  ){}
+  async create(createBookingDto: CreateBookingDto) {
+    return await this.bookingRepository.save(createBookingDto).then((booking)=>{
+      return booking;
+    })
   }
 
   findAll() {

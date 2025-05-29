@@ -13,6 +13,7 @@ export class CreateAdminDto {
   @IsString()
   password: string;
 
+  
   @IsEmail()
   email: string;
 

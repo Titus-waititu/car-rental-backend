@@ -13,7 +13,7 @@ export class Subscriber {
   @PrimaryGeneratedColumn()
   subscriber_id: number;
 
-  @Column()
+  @Column({unique:true})
   email: string;
 
   @Column({

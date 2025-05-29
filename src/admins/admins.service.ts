@@ -16,8 +16,8 @@ export class AdminsService {
   async create(createAdminDto: CreateAdminDto) {
     return await this.adminRepository
       .save(createAdminDto)
-      .then((profile) => {
-        return profile;
+      .then((admin) => {
+        return admin;
       })
       .catch((error) => {
         console.error('Error creating Admin:', error);

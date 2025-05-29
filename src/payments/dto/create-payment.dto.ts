@@ -34,5 +34,5 @@ export class CreatePaymentDto {
   payment_status: PaymentStatus;
 
   @IsDateString()
-  paymeny_date: Date;
+  payment_date: Date;
 }
