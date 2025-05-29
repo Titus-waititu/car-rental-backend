@@ -10,38 +10,28 @@ import { BookingsModule } from './bookings/bookings.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { ContactUsQueriesModule } from './contact_us_queries/contact_us_queries.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
-import { ConfigModule  } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger.middleware';
-import { PrismaModule } from './prisma/prisma.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
-import { Vehicle } from './vehicles/entities/vehicle.entity';
-import { VehicleBrand } from './vehicle_brands/entities/vehicle_brand.entity';
-import { Booking } from './bookings/entities/booking.entity';
-import { Admin } from './admins/entities/admin.entity';
-import { ContactUsQuery } from './contact_us_queries/entities/contact_us_query.entity';
-import { GuestUser } from './guest_users/entities/guest_user.entity';
-import { Subscriber } from './subscribers/entities/subscriber.entity';
-import { Testimonial } from './testimonials/entities/testimonial.entity';
+import { DatabaseModule } from './database/database.module';
+import { PaymentsModule } from './payments/payments.module';
+import { RatingsModule } from './ratings/ratings.module';
+import { SeedModule } from './seed/seed.module';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true,
-      envFilePath:'.env',
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    //  TypeOrmModule.forRoot({
+    //   type:'postgres',
+    //   host:'localhost',
+    //   port:5432,
+    //   username:'postgres',
+    //   password: process.env.PASSWORD || '1234',
+    //   database:'car-rental',
+    //   entities:[User,Vehicle,VehicleBrand,Booking,Admin,ContactUsQuery
+    //   ,GuestUser,Subscriber,Testimonial],
+    //   synchronize:true,
+    //   autoLoadEntities:true
 
-     }),
-     TypeOrmModule.forRoot({
-      type:'postgres',
-      host:'localhost',
-      port:5432,
-      username:'postgres',
-      password: process.env.PASSWORD || '1234',
-      database:'car-rental',
-      entities:[User,Vehicle,VehicleBrand,Booking,Admin,ContactUsQuery
-      ,GuestUser,Subscriber,Testimonial],
-      synchronize:true,
-      autoLoadEntities:true
-      
-     }),
+    //  }),
     AdminsModule,
     UsersModule,
     GuestUsersModule,
@@ -51,13 +41,16 @@ import { Testimonial } from './testimonials/entities/testimonial.entity';
     TestimonialsModule,
     ContactUsQueriesModule,
     SubscribersModule,
-    PrismaModule,
+    DatabaseModule,
+    PaymentsModule,
+    RatingsModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*')
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

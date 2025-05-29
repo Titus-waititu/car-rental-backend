@@ -1,26 +1,27 @@
-import { IsDate, IsDateString, IsEnum, IsNumber } from 'class-validator'
+import { IsDate, IsDateString, IsEnum, IsNumber } from 'class-validator';
 
-export enum BookingStatus{
-    confirmed = 'confirmed',
-    cancelled = 'cancelled'
+export enum BookingStatus {
+  pending = 'pending',
+  confirmed = 'confirmed',
+  cancelled = 'cancelled',
 }
 
 export class CreateBookingDto {
-    @IsNumber()
-    booking_id:number;
+  @IsNumber()
+  userId: number;
 
-    @IsNumber()
-    user_id:number;
+  @IsNumber()
+  vehicleId: number;
 
-    @IsNumber()
-    vehicle_id:number;
+  @IsNumber()
+  paymentId: number;
 
-    @IsDateString()
-    booking_date:Date;
+  @IsDateString()
+  booking_date: Date;
 
-    @IsEnum(BookingStatus)
-    status:BookingStatus;
+  @IsEnum(BookingStatus)
+  status: BookingStatus;
 
-    @IsDateString()
-    return_date:Date
+  @IsDateString()
+  return_date: Date;
 }

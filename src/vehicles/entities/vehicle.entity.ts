@@ -1,12 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Booking } from 'src/bookings/entities/booking.entity';
+import { Rating } from 'src/ratings/entities/rating.entity';
+import { VehicleBrand } from 'src/vehicle_brands/entities/vehicle_brand.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
 @Entity()
 export class Vehicle {
   @PrimaryGeneratedColumn()
   vehicle_id: number;
-
-  @Column()
-  brand_id: number;
 
   @Column()
   model: string;
@@ -20,6 +27,19 @@ export class Vehicle {
   @Column()
   availability: boolean;
 
-  @Column({ type: 'timestamp' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   created_at: Date;
+
+  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicle)
+  vehicle_brand: VehicleBrand;
+
+  @OneToOne(() => Booking, (booking) => booking.vehicle)
+  booking: Booking;
+
+  @OneToMany(() => Rating, (rating) => rating.vehicle)
+  rating: Rating[];
 }

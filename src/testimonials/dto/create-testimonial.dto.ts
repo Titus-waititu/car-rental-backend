@@ -1,23 +1,26 @@
-import { IsDate, IsDateString, IsEnum, IsNumber, IsString } from 'class-validator'
+import {
+  IsDate,
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export enum TestimonialStatus {
-    active = 'active',
-    inactive = 'inactive'
+  active = 'active',
+  inactive = 'inactive',
 }
 
 export class CreateTestimonialDto {
-    @IsNumber()
-    testimonial_id:number;
+  @IsNumber()
+  userId: number;
 
-    @IsNumber()
-    user_id:number;
+  @IsString()
+  testimonial: string;
 
-    @IsString()
-    testimonial:string;
+  @IsEnum(TestimonialStatus)
+  status: TestimonialStatus;
 
-    @IsEnum(TestimonialStatus)
-    status:TestimonialStatus;
-
-    @IsDateString()
-    created_at:Date
+  @IsDateString()
+  created_at: Date;
 }

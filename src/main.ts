@@ -5,11 +5,11 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe());
 
-  const configService = app.get(ConfigService)
-  const PORT = configService.getOrThrow<number>('PORT')
+  const configService = app.get(ConfigService);
+  const PORT = configService.getOrThrow<number>('PORT');
   await app.listen(PORT);
-  console.log(`The server started at port: ${PORT}`)
+  console.log(`The server started at port: ${PORT}`);
 }
 bootstrap();

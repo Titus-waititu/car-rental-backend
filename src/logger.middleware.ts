@@ -25,9 +25,8 @@ export class LoggerMiddleware implements NestMiddleware {
       );
 
       //call the original end function
-      return originalEnd.apply(res,args) as Response;
-
-    } as Response['end']
-    next()
+      return originalEnd.apply(res, args) as Response;
+    } as Response['end'];
+    next();
   }
 }

@@ -27,17 +27,20 @@ export class BookingsController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.bookingsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id',ParseIntPipe) id: number, @Body() updateBookingDto: UpdateBookingDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBookingDto: UpdateBookingDto,
+  ) {
     return this.bookingsService.update(id, updateBookingDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.bookingsService.remove(id);
   }
 }

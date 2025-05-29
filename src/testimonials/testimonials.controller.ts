@@ -27,20 +27,20 @@ export class TestimonialsController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.testimonialsService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id',ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTestimonialDto: UpdateTestimonialDto,
   ) {
     return this.testimonialsService.update(id, updateTestimonialDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.testimonialsService.remove(+id);
   }
 }

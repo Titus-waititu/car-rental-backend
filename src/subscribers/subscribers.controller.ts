@@ -27,20 +27,20 @@ export class SubscribersController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.subscribersService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id',ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateSubscriberDto: UpdateSubscriberDto,
   ) {
     return this.subscribersService.update(id, updateSubscriberDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.subscribersService.remove(id);
   }
 }

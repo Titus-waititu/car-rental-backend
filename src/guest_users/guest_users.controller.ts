@@ -27,20 +27,20 @@ export class GuestUsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.guestUsersService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id',ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateGuestUserDto: UpdateGuestUserDto,
   ) {
     return this.guestUsersService.update(id, updateGuestUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.guestUsersService.remove(id);
   }
 }

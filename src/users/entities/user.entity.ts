@@ -1,4 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Payment } from 'src/payments/entities/payment.entity';
+import { Booking } from '../../bookings/entities/booking.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
+import { Rating } from 'src/ratings/entities/rating.entity';
+import { Testimonial } from 'src/testimonials/entities/testimonial.entity';
+import { ContactUsQuery } from 'src/contact_us_queries/entities/contact_us_query.entity';
+import { Subscriber } from 'src/subscribers/entities/subscriber.entity';
 
 export enum UserStatus {
   active = 'active',
@@ -11,7 +23,7 @@ export class User {
   user_id: number;
 
   @Column()
-  amail: string;
+  email: string;
 
   @Column()
   password: string;
@@ -34,6 +46,30 @@ export class User {
   @Column()
   profile_picture: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   last_login: Date;
+
+  //retaltion to bookings table
+
+  @OneToMany(() => Booking, (booking) => booking.user)
+  bookings: Booking[];
+
+  @OneToMany(() => Payment, (payment) => payment.user)
+  payments: Payment[];
+
+  @OneToMany(() => Rating, (rating) => rating.user)
+  ratings: Rating[];
+
+  @OneToMany(() => Testimonial, (test) => test.user)
+  testimonial: Testimonial[];
+
+  @OneToMany(() => ContactUsQuery, (contact) => contact.user)
+  contactus: ContactUsQuery[];
+
+  @OneToOne(() => Subscriber, (subscriber) => subscriber.user)
+  subscriber: Subscriber;
 }

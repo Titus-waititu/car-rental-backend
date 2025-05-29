@@ -14,6 +14,10 @@ export class Admin {
   @Column()
   email: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   last_login: Date;
 }

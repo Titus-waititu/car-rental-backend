@@ -27,17 +27,20 @@ export class VehiclesController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.vehiclesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id',ParseIntPipe) id: number, @Body() updateVehicleDto: UpdateVehicleDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateVehicleDto: UpdateVehicleDto,
+  ) {
     return this.vehiclesService.update(id, updateVehicleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.vehiclesService.remove(id);
   }
 }

@@ -19,7 +19,7 @@ export class AdminsController {
 
   @Post()
   create(@Body() createAdminDto: CreateAdminDto) {
-    console.log(createAdminDto)
+    console.log(createAdminDto);
     return this.adminsService.create(createAdminDto);
   }
 
@@ -30,17 +30,20 @@ export class AdminsController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.adminsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id',ParseIntPipe) id: number, @Body() updateAdminDto: UpdateAdminDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateAdminDto: UpdateAdminDto,
+  ) {
     return this.adminsService.update(id, updateAdminDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.adminsService.remove(id);
   }
 }

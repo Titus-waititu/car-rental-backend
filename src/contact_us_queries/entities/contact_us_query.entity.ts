@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 export enum QueryStatus {
   resolved = 'resolved',
@@ -11,12 +19,6 @@ export class ContactUsQuery {
   query_id: number;
 
   @Column()
-  guest_user_id: number;
-
-  @Column()
-  user_id: number;
-
-  @Column()
   query_message: string;
 
   @Column({
@@ -25,6 +27,18 @@ export class ContactUsQuery {
   })
   status: QueryStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   created_at: Date;
+
+  @ManyToOne(() => User, (user) => user.contactus)
+  @JoinColumn()
+  user: User;
+
+  @ManyToOne(() => GuestUser, (guest) => guest.contactus)
+  @JoinColumn()
+  guest: GuestUser;
 }

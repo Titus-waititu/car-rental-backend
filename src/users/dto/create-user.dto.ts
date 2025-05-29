@@ -1,35 +1,39 @@
-import {IsDateString, IsEmail, IsEmpty, IsEnum, IsNumber, IsString} from 'class-validator'
+import {
+  IsDateString,
+  IsEmail,
+  IsEmpty,
+  IsEnum,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export enum UserStatus {
-    active = 'active',
-    inactive = 'inactive'
+  active = 'active',
+  inactive = 'inactive',
 }
 
 export class CreateUserDto {
-    @IsNumber()
-    user_id:number;
+  @IsEmail()
+  email: string;
 
-    @IsEmail()
-    amail:string;
+  @IsString()
+  password: string;
 
-    @IsString()
-    password:string;
+  @IsString()
+  first_name: string;
 
-    @IsString()
-    first_name:string;
+  @IsString()
+  last_name: string;
 
-    @IsString()
-    last_name:string;
+  @IsEnum(UserStatus)
+  status: UserStatus;
 
-    @IsEnum(UserStatus)
-    status:UserStatus;
+  @IsString()
+  phone_number: string;
 
-    @IsString()
-    phone_number:string;
+  @IsString()
+  profile_picture: string;
 
-    @IsString()
-    profile_picture:string;
-
-    @IsDateString()
-    last_login:Date
+  @IsDateString()
+  last_login: Date;
 }

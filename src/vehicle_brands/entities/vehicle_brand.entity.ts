@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity()
 export class VehicleBrand {
@@ -8,6 +15,14 @@ export class VehicleBrand {
   @Column()
   brand_name: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   created_at: Date;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicle_brand)
+  @JoinColumn()
+  vehicle: Vehicle[];
 }

@@ -29,20 +29,20 @@ export class ContactUsQueriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.contactUsQueriesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id',ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateContactUsQueryDto: UpdateContactUsQueryDto,
   ) {
     return this.contactUsQueriesService.update(id, updateContactUsQueryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.contactUsQueriesService.remove(id);
   }
 }

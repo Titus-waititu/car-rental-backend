@@ -7,7 +7,6 @@ POST {{url}}/admins
 Content-Type: application/json
 
 {
-    "admin_id":1,
     "username":"Kamau",
     "password":"1234",
     "email":"kamaa@gmail.com",

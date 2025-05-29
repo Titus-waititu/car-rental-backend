@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ContactUsQuery } from 'src/contact_us_queries/entities/contact_us_query.entity';
+import { Subscriber } from 'src/subscribers/entities/subscriber.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
 @Entity()
 export class GuestUser {
@@ -16,4 +24,12 @@ export class GuestUser {
 
   @Column()
   phone_number: string;
+
+  @OneToMany(() => ContactUsQuery, (contact) => contact.guest)
+  contactus: ContactUsQuery[];
+
+  @OneToOne(() => Subscriber, (subscriber) => subscriber.guestUser)
+  subscriber: Subscriber;
+
+  // @OneToMany(()=>ContactUsQuery)
 }
