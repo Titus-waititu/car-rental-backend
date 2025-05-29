@@ -21,7 +21,12 @@ export class SubscribersService {
   }
 
   async findAll() {
-    return this.subscribersRepository.find().then((subscribers) => {
+    return this.subscribersRepository.find({
+      order: {
+        subscriber_id: 'ASC', // Sort by subscriber_id in ascending order
+      },
+      relations: ['user'], 
+    }).then((subscribers) => {
       if (subscribers.length === 0) {
         return 'No subscribers found.';
       }
@@ -33,7 +38,11 @@ export class SubscribersService {
   }
 
   async findOne(id: number) {
-    return this.subscribersRepository.findOne({ where: { subscriber_id: id } }).then((subscriber) => {
+    return this.subscribersRepository.findOne({ where: { subscriber_id: id },
+      relations: ['user'],
+    
+    
+    }).then((subscriber) => {
       if (!subscriber) {
         return `Subscriber with ID ${id} not found.`;
       }

@@ -21,7 +21,12 @@ export class TestimonialsService {
   }
 
   async findAll() {
-    return await this.testimonialsRepository.find().then((testimonials) => {
+    return await this.testimonialsRepository.find({
+      order: {
+        testimonial_id: 'ASC', // Sort by testimonial_id in ascending order
+      },
+      relations: ['guest_user'], 
+    }).then((testimonials) => {
       if (testimonials.length === 0) {
         return 'No testimonials found.';
       }

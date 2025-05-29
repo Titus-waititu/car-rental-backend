@@ -24,7 +24,10 @@ export class RatingsService {
 
   async findAll() {
     return this.ratingsRepository
-        .find()
+        .find({
+          order: { rating_id: 'ASC' },
+          relations: ['guest_user', 'vehicle'],
+        })
         .then((ratings) => {
           if (ratings.length === 0) {
             return 'No ratings found.';

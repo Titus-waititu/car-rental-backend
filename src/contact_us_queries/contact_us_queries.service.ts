@@ -21,7 +21,12 @@ export class ContactUsQueriesService {
 
   async findAll() {
     return await this.contactUsQueryDto
-      .find()
+      .find({
+        relations: {
+          user: true,
+          
+        },
+      })
       .then((contactUsQueries) => {
         if (contactUsQueries.length === 0) {
           return 'No contact us queries found';
@@ -36,7 +41,12 @@ export class ContactUsQueriesService {
 
   async findOne(query_id: number) {
     return await this.contactUsQueryDto
-      .findOneBy({ query_id })
+      .findOne({
+        where: { query_id },
+        relations: {
+          user: true,
+        },
+      })
       .then((contactUsQuery) => {
         if (!contactUsQuery) {
           return `Contact us query with ID ${query_id} not found`;

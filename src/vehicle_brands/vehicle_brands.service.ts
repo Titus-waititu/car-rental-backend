@@ -22,7 +22,12 @@ export class VehicleBrandsService {
   }
 
   async findAll() {
-    return await this.vehicleBrandsRepository.find().then((vehicleBrands) => {
+    return await this.vehicleBrandsRepository.find({
+      order: {
+        brand_id: 'ASC', // Sort by brand_id in ascending order
+      },
+      relations: ['vehicles'], 
+    }).then((vehicleBrands) => {
       if (vehicleBrands.length === 0) {
         return 'No vehicle brands found.';
       }

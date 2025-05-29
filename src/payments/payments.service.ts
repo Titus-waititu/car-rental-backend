@@ -22,7 +22,12 @@ export class PaymentsService {
   }
 
   async findAll() {
-    return this.paymentsRepository.find().then((payments) => {  
+    return this.paymentsRepository.find({
+      order: {
+        payment_id: 'ASC', // Sort by payment_id in ascending order
+      },
+      relations: ['guest_user', 'admin'], 
+    }).then((payments) => {  
       if (payments.length === 0) {
         return 'No payments found.';
       }

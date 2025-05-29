@@ -25,7 +25,12 @@ export class GuestUsersService {
 
   async findAll() {
     return await this.guestRepository
-      .find()
+      .find({
+        order: {
+          guest_id: 'ASC',
+        },
+        relations: ['ratings', 'testimonials'],
+      })
       .then((guestUsers) => {
         if (guestUsers.length === 0) {
           return 'No guest users found.';
@@ -40,7 +45,9 @@ export class GuestUsersService {
 
   async findOne(id: number) {
     return await this.guestRepository
-      .findOne({ where: { guest_id: id } })
+      .findOne({ where: { guest_id: id },
+        relations: ['ratings', 'testimonials'],
+      })
       .then((guestUser) => {
         if (!guestUser) {
           return `Guest user with ID ${id} not found.`;

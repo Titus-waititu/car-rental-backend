@@ -4,6 +4,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { Repository } from 'typeorm';
+import { r } from '@faker-js/faker/dist/airline-BUL6NtOJ';
 
 @Injectable()
 export class BookingsService {
@@ -18,9 +19,24 @@ export class BookingsService {
       });
   }
 
-  async findAll() {
+  async findAll(string?: string) {
+    if (string) {
+      return await this.bookingRepository.find({
+        relations: {
+          user: true,
+          vehicle: true,
+          payment: true,
+        },
+      });
+    }
     return await this.bookingRepository
-      .find()
+      .find({
+        relations: {
+          user: true,
+          vehicle: true,
+          payment: true,
+        },
+      })
       .then((bookings) => {
         if (bookings.length === 0) {
           return 'No bookings found';
@@ -35,7 +51,14 @@ export class BookingsService {
 
   async findOne(booking_id: number) {
     return await this.bookingRepository
-      .findOneBy({ booking_id })
+      .findOne({
+        where: { booking_id },
+        relations: {
+          user: true,
+          vehicle: true,
+          payment: true,
+        },
+      })
       .then((booking) => {
         if (!booking) {
           return `Booking with ID ${booking_id} not found`;

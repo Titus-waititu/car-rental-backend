@@ -22,7 +22,10 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-   return await this.usersRepository.find().then((users) => { 
+   return await this.usersRepository.find({
+      order: { user_id: 'ASC' },
+      relations: ['subscribers', 'guest_users', 'ratings', 'testimonials'],
+   }).then((users) => { 
       if (users.length === 0) {
         return [];
       }
