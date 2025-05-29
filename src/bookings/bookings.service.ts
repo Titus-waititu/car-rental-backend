@@ -16,8 +16,8 @@ export class BookingsService {
     })
   }
 
-  findAll() {
-    return this.bookingRepository.find().then((bookings)=>{
+  async findAll() {
+    return await this.bookingRepository.find().then((bookings)=>{
       if (bookings.length === 0) {
         return 'No bookings found';
       }
@@ -30,15 +30,45 @@ export class BookingsService {
     );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
+  async findOne(booking_id: number) {
+    return await this.bookingRepository.findOneBy({booking_id}).then((booking)=>{
+      if (!booking) {
+        return `Booking with ID ${booking_id} not found`;
+      }
+      return booking;
+    }
+    ).catch((error)=>{
+      console.error('Error fetching booking:', error);
+      throw new Error(`Failed to fetch booking with ID ${booking_id}`);
+    }
+    );
   }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
-    return `This action updates a #${id} booking`;
+  async update(id: number, updateBookingDto: UpdateBookingDto) {
+    return await this.bookingRepository.update(id, updateBookingDto).then((result)=>{
+      if (result.affected === 0) {
+        return `Booking with ID ${id} not found`;
+      }
+      return `Booking with ID ${id} updated successfully`;
+    }
+    ).catch((error)=>{
+      console.error('Error updating booking:', error);
+      throw new Error(`Failed to update booking with ID ${id}`);
+    }
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} booking`;
+  async remove(id: number) {
+    return await this.bookingRepository.delete(id).then((result)=>{
+      if (result.affected === 0) {
+        return `Booking with ID ${id} not found`;
+      }
+      return `Booking with ID ${id} deleted successfully`;
+    }
+    ).catch((error)=>{
+      console.error('Error deleting booking:', error);
+      throw new Error(`Failed to delete booking with ID ${id}`);
+    }
+    );
   }
 }

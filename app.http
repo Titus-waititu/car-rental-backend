@@ -1,7 +1,7 @@
 @url = http://localhost:8000
 
 ###
-POST {{url}}/bookings
+POST {{url}}/seed
 ###
 POST {{url}}/admins
 Content-Type: application/json
