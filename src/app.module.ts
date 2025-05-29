@@ -16,7 +16,7 @@ import { DatabaseModule } from './database/database.module';
 import { PaymentsModule } from './payments/payments.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { SeedModule } from './seed/seed.module';
-import { LogsModule } from './logs/logs.module';
+import { LogsModule } from './logger/logs.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
