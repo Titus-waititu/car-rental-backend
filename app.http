@@ -1,7 +1,7 @@
-@url = https://car-rental-backend-1-5axa.onrender.com
+@url = https://localhost:8000
 
 ###
-GET {{url}}/admins
+GET {{url}}/seed
 ###
 POST {{url}}/admins
 Content-Type: application/json
