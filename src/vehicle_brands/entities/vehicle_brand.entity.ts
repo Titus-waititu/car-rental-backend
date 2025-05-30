@@ -24,5 +24,5 @@ export class VehicleBrand {
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicle_brand)
   @JoinColumn()
-  vehicle: Vehicle[];
+  vehicles: Vehicle[];
 }

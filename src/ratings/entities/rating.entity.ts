@@ -31,7 +31,7 @@ export class Rating {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.rating)
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.ratings)
   @JoinColumn()
   vehicle: Vehicle;
 }

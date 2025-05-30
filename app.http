@@ -1,6 +1,9 @@
 @url = https://car-rental-backend-1-5axa.onrender.com
 
 ###
+GET {{url}}/admins
+
+###
 POST {{url}}/seed
 ###
 POST {{url}}/admins

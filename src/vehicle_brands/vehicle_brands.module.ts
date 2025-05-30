@@ -7,7 +7,7 @@ import { VehicleBrand } from './entities/vehicle_brand.entity';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([VehicleBrand,Vehicle])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([VehicleBrand, Vehicle])],
   controllers: [VehicleBrandsController],
   providers: [VehicleBrandsService],
 })

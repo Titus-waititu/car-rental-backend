@@ -33,7 +33,7 @@ export class Testimonial {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.testimonial)
+  @ManyToOne(() => User, (user) => user.testimonials)
   @JoinColumn()
   user: User;
 }

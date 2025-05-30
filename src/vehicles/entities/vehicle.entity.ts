@@ -34,12 +34,12 @@ export class Vehicle {
   })
   created_at: Date;
 
-  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicle)
+  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicles)
   vehicle_brand: VehicleBrand;
 
   @OneToOne(() => Booking, (booking) => booking.vehicle)
   booking: Booking;
 
   @OneToMany(() => Rating, (rating) => rating.vehicle)
-  rating: Rating[];
+  ratings: Rating[];
 }

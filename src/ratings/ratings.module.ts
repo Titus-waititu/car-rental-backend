@@ -8,7 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Rating,User,Vehicle])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Rating, User, Vehicle])],
   controllers: [RatingsController],
   providers: [RatingsService],
 })

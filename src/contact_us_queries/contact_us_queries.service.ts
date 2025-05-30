@@ -19,12 +19,14 @@ export class ContactUsQueriesService {
       });
   }
 
-  async findAll() {
+  async findAll():Promise<ContactUsQuery[] | string> {
     return await this.contactUsQueryDto
       .find({
+        order:{
+          query_id:'ASC'
+        },
         relations: {
           user: true,
-          
         },
       })
       .then((contactUsQueries) => {
@@ -39,12 +41,16 @@ export class ContactUsQueriesService {
       });
   }
 
-  async findOne(query_id: number) {
+  async findOne(query_id: number):Promise<ContactUsQuery | string> {
     return await this.contactUsQueryDto
       .findOne({
+          order:{
+          query_id:'ASC'
+        },
         where: { query_id },
         relations: {
           user: true,
+          guest:true
         },
       })
       .then((contactUsQuery) => {
@@ -59,7 +65,7 @@ export class ContactUsQueriesService {
       });
   }
 
-  async update(id: number, updateContactUsQueryDto: UpdateContactUsQueryDto) {
+  async update(id: number, updateContactUsQueryDto: UpdateContactUsQueryDto):Promise<string> {
     return await this.contactUsQueryDto
       .update(id, updateContactUsQueryDto)
       .then((result) => {
@@ -74,7 +80,7 @@ export class ContactUsQueriesService {
       });
   }
 
-  async remove(id: number) {
+  async remove(id: number):Promise<string> {
     return await this.contactUsQueryDto
       .delete(id)
       .then((result) => {

@@ -21,62 +21,66 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-   return await this.usersRepository.find({
-      order: { user_id: 'ASC' },
-      relations: ['subscribers', 'guest_users', 'ratings', 'testimonials'],
-   }).then((users) => { 
-      if (users.length === 0) {
-        return [];
-      }
-      return users;
-    }
-    ).catch((error) => {
-      console.error('Error retrieving users:', error);
-      throw new Error('Failed to retrieve users.');
-    }
-    );
+  async findAll(): Promise<User[] | string> {
+    return await this.usersRepository
+      .find({
+        order: { user_id: 'ASC' },
+        relations: ['subscribers', 'bookings', 'ratings', 'testimonials','contactus','payments'],
+      })
+      .then((users) => {
+        if (users.length === 0) {
+          return [];
+        }
+        return users;
+      })
+      .catch((error) => {
+        console.error('Error retrieving users:', error);
+        throw new Error('Failed to retrieve users.');
+      });
   }
 
-  async findOne(id: number) {
-    return await this.usersRepository.findOne({ where: { user_id: id } }).then((user) => {
-      if (!user) {
-        return `User with ID ${id} not found.`;
-      }
-      return user;
-    }
-    ).catch((error) => {
-      console.error('Error retrieving user:', error);
-      throw new Error(`Failed to retrieve user with ID ${id}.`);
-    }
-    );
+  async findOne(id: number):Promise <User | string> {
+    return await this.usersRepository
+      .findOne({ where: { user_id: id }, relations: ['subscribers', 'bookings', 'ratings', 'testimonials','contactus','payments'] })
+      .then((user) => {
+        if (!user) {
+          return `User with ID ${id} not found.`;
+        }
+        return user;
+      })
+      .catch((error) => {
+        console.error('Error retrieving user:', error);
+        throw new Error(`Failed to retrieve user with ID ${id}.`);
+      });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.usersRepository.update(id, updateUserDto).then((result) => {
-      if (result.affected === 0) {
-        return `User with ID ${id} not found or no changes made.`;
-      }
-      return `User with ID ${id} updated successfully.`;
-    }
-    ).catch((error) => {
-      console.error('Error updating user:', error);
-      throw new Error(`Failed to update user with ID ${id}.`);
-    }
-  );
+  async update(id: number, updateUserDto: UpdateUserDto) :Promise<string>{
+    return await this.usersRepository
+      .update(id, updateUserDto)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `User with ID ${id} not found or no changes made.`;
+        }
+        return `User with ID ${id} updated successfully.`;
+      })
+      .catch((error) => {
+        console.error('Error updating user:', error);
+        throw new Error(`Failed to update user with ID ${id}.`);
+      });
   }
 
-  async remove(id: number) {
-    return await this.usersRepository.delete(id).then((result) => {
-      if (result.affected === 0) {
-        return `User with ID ${id} not found.`;
-      }
-      return `User with ID ${id} deleted successfully.`;
-    }
-    ).catch((error) => {
-      console.error('Error deleting user:', error);
-      throw new Error(`Failed to delete user with ID ${id}.`);
-    }
-    );
+  async remove(id: number):Promise<string> {
+    return await this.usersRepository
+      .delete(id)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `User with ID ${id} not found.`;
+        }
+        return `User with ID ${id} deleted successfully.`;
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error);
+        throw new Error(`Failed to delete user with ID ${id}.`);
+      });
   }
 }

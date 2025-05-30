@@ -4,7 +4,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { Repository } from 'typeorm';
-import { r } from '@faker-js/faker/dist/airline-BUL6NtOJ';
+
 
 @Injectable()
 export class BookingsService {
@@ -19,9 +19,12 @@ export class BookingsService {
       });
   }
 
-  async findAll(string?: string) {
+  async findAll(string?: string):Promise<Booking[] | string> {
     if (string) {
       return await this.bookingRepository.find({
+        order: {
+          booking_id:'ASC'
+        },
         relations: {
           user: true,
           vehicle: true,
@@ -31,6 +34,9 @@ export class BookingsService {
     }
     return await this.bookingRepository
       .find({
+         order: {
+          booking_id:'ASC'
+        },
         relations: {
           user: true,
           vehicle: true,
@@ -49,7 +55,7 @@ export class BookingsService {
       });
   }
 
-  async findOne(booking_id: number) {
+  async findOne(booking_id: number):Promise<Booking | string> {
     return await this.bookingRepository
       .findOne({
         where: { booking_id },
@@ -57,6 +63,9 @@ export class BookingsService {
           user: true,
           vehicle: true,
           payment: true,
+        },
+         order: {
+          booking_id:'ASC'
         },
       })
       .then((booking) => {
@@ -71,7 +80,7 @@ export class BookingsService {
       });
   }
 
-  async update(id: number, updateBookingDto: UpdateBookingDto) {
+  async update(id: number, updateBookingDto: UpdateBookingDto): Promise<string> {
     return await this.bookingRepository
       .update(id, updateBookingDto)
       .then((result) => {
@@ -86,7 +95,7 @@ export class BookingsService {
       });
   }
 
-  async remove(id: number) {
+  async remove(id: number):Promise<string> {
     return await this.bookingRepository
       .delete(id)
       .then((result) => {

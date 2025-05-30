@@ -23,7 +23,7 @@ export class Subscriber {
   })
   subscribed_at: Date;
 
-  @OneToOne(() => User, (user) => user.subscriber)
+  @OneToOne(() => User, (user) => user.subscribers)
   @JoinColumn()
   user: User;
 

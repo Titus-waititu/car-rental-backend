@@ -8,7 +8,10 @@ import { ContactUsQuery } from 'src/contact_us_queries/entities/contact_us_query
 import { Subscriber } from 'src/subscribers/entities/subscriber.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([GuestUser,ContactUsQuery,Subscriber])],
+  imports: [
+    DatabaseModule,
+    TypeOrmModule.forFeature([GuestUser, ContactUsQuery, Subscriber]),
+  ],
   controllers: [GuestUsersController],
   providers: [GuestUsersService],
 })

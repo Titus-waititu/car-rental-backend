@@ -7,7 +7,7 @@ import { Testimonial } from './entities/testimonial.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Testimonial,User])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Testimonial, User])],
   controllers: [TestimonialsController],
   providers: [TestimonialsService],
 })

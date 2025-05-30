@@ -9,7 +9,10 @@ import { Booking } from 'src/bookings/entities/booking.entity';
 import { Rating } from 'src/ratings/entities/rating.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Vehicle,VehicleBrand,Booking,Rating])],
+  imports: [
+    DatabaseModule,
+    TypeOrmModule.forFeature([Vehicle, VehicleBrand, Booking, Rating]),
+  ],
   controllers: [VehiclesController],
   providers: [VehiclesService],
 })

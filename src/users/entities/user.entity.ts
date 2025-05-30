@@ -65,11 +65,11 @@ export class User {
   ratings: Rating[];
 
   @OneToMany(() => Testimonial, (test) => test.user)
-  testimonial: Testimonial[];
+  testimonials: Testimonial[];
 
   @OneToMany(() => ContactUsQuery, (contact) => contact.user)
   contactus: ContactUsQuery[];
 
   @OneToOne(() => Subscriber, (subscriber) => subscriber.user)
-  subscriber: Subscriber;
+  subscribers: Subscriber;
 }
