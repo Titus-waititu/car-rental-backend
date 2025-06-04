@@ -12,7 +12,7 @@ export class LogsService {
     }
   }
 
-  async logToFile(message: string, clientIp: string): Promise<void> {
+  logToFile(message: string, clientIp: string): void {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] [${clientIp}] ${message}\n`;
 
@@ -24,22 +24,22 @@ export class LogsService {
     });
   }
 
-  async readLogs(): Promise<string> {
+  readLogs(): string {
     const filePath = path.join(this.logDir, 'errors.log');
     try {
       return fs.readFileSync(filePath, 'utf-8');
     } catch (err) {
-      return 'Log file not found or unreadable.';
+      return `Log file not found or unreadable.${err}`;
     }
   }
 
-  async clearLogs(): Promise<string> {
+  clearLogs(): string {
     const filePath = path.join(this.logDir, 'errors.log');
     try {
       fs.writeFileSync(filePath, '');
       return 'Logs cleared successfully.';
     } catch (err) {
-      return 'Failed to clear log file.';
+      return `Failed to clear log file. ${err}`;
     }
   }
 }

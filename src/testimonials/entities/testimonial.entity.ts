@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 
 export enum TestimonialStatus {
@@ -33,7 +34,7 @@ export class Testimonial {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.testimonials)
+  @ManyToOne(() => User, (user) => user.testimonials, { nullable: true ,onDelete: 'CASCADE'})
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 }

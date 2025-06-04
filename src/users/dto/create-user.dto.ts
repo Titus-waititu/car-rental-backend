@@ -1,11 +1,4 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsEmpty,
-  IsEnum,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsEmail, IsEnum, IsString } from 'class-validator';
 
 export enum UserStatus {
   active = 'active',

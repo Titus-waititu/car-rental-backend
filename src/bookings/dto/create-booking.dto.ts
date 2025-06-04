@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, IsEnum, IsNumber } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber } from 'class-validator';
 
 export enum BookingStatus {
   pending = 'pending',
@@ -7,15 +7,6 @@ export enum BookingStatus {
 }
 
 export class CreateBookingDto {
-  @IsNumber()
-  userId: number;
-
-  @IsNumber()
-  vehicleId: number;
-
-  @IsNumber()
-  paymentId: number;
-
   @IsDateString()
   booking_date: Date;
 
@@ -24,4 +15,10 @@ export class CreateBookingDto {
 
   @IsDateString()
   return_date: Date;
+
+  @IsNumber()
+  userId: number;
+
+  @IsNumber()
+  vehicleId: number;
 }

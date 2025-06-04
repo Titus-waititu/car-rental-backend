@@ -25,7 +25,14 @@ export class UsersService {
     return await this.usersRepository
       .find({
         order: { user_id: 'ASC' },
-        relations: ['subscribers', 'bookings', 'ratings', 'testimonials','contactus','payments'],
+        relations: [
+          'subscribers',
+          'bookings',
+          'ratings',
+          'testimonials',
+          'contactus',
+          'payments',
+        ],
       })
       .then((users) => {
         if (users.length === 0) {
@@ -39,9 +46,19 @@ export class UsersService {
       });
   }
 
-  async findOne(id: number):Promise <User | string> {
+  async findOne(id: number): Promise<User | string> {
     return await this.usersRepository
-      .findOne({ where: { user_id: id }, relations: ['subscribers', 'bookings', 'ratings', 'testimonials','contactus','payments'] })
+      .findOne({
+        where: { user_id: id },
+        relations: [
+          'subscribers',
+          'bookings',
+          'ratings',
+          'testimonials',
+          'contactus',
+          'payments',
+        ],
+      })
       .then((user) => {
         if (!user) {
           return `User with ID ${id} not found.`;
@@ -54,7 +71,7 @@ export class UsersService {
       });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) :Promise<string>{
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<string> {
     return await this.usersRepository
       .update(id, updateUserDto)
       .then((result) => {
@@ -69,7 +86,7 @@ export class UsersService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.usersRepository
       .delete(id)
       .then((result) => {

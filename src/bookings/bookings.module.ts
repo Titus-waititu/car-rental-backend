@@ -9,7 +9,10 @@ import { User } from 'src/users/entities/user.entity';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 
 @Module({
-  imports: [DatabaseModule,TypeOrmModule.forFeature([Booking, Payment, User, Vehicle])],
+  imports: [
+    DatabaseModule,
+    TypeOrmModule.forFeature([Booking, Payment, User, Vehicle]),
+  ],
   controllers: [BookingsController],
   providers: [BookingsService],
 })

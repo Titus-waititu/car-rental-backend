@@ -22,13 +22,13 @@ export class RatingsService {
       });
   }
 
-  async findAll():Promise<Rating[] | string> {
+  async findAll(): Promise<Rating[] | string> {
     return this.ratingsRepository
       .find({
         order: { rating_id: 'ASC' },
         relations: {
-          user:true,
-          vehicle:true
+          user: true,
+          vehicle: true,
         },
       })
       .then((ratings) => {
@@ -43,13 +43,16 @@ export class RatingsService {
       });
   }
 
-  async findOne(id: number):Promise<Rating | string> {
+  async findOne(id: number): Promise<Rating | string> {
     return this.ratingsRepository
-      .findOne({ where: { rating_id: id }, relations: {
-          user:true,
-          vehicle:true
+      .findOne({
+        where: { rating_id: id },
+        relations: {
+          user: true,
+          vehicle: true,
         },
-      order: { rating_id: 'ASC' }, })
+        order: { rating_id: 'ASC' },
+      })
       .then((rating) => {
         if (!rating) {
           return `Rating with ID ${id} not found.`;
@@ -62,7 +65,7 @@ export class RatingsService {
       });
   }
 
-  async update(id: number, updateRatingDto: UpdateRatingDto):Promise<string> {
+  async update(id: number, updateRatingDto: UpdateRatingDto): Promise<string> {
     return this.ratingsRepository
       .update(id, updateRatingDto)
       .then((result) => {
@@ -77,7 +80,7 @@ export class RatingsService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return this.ratingsRepository
       .delete(id)
       .then((result) => {

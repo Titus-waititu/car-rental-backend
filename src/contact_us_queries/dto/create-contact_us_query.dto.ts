@@ -7,16 +7,16 @@ export enum QueryStatus {
 
 export class CreateContactUsQueryDto {
   @IsNumber()
-  guestId: number;
+  guestId?: number;
 
   @IsNumber()
-  userId: number;
+  userId?: number;
 
   @IsString()
   query_message: string;
 
   @IsEnum(QueryStatus)
-  status: QueryStatus;
+  status?: QueryStatus;
 
   @IsDateString()
   created_at: Date;

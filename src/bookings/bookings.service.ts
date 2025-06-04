@@ -4,26 +4,49 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { Repository } from 'typeorm';
-
+import { User } from 'src/users/entities/user.entity';
+import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 
 @Injectable()
 export class BookingsService {
   constructor(
     @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
+    @InjectRepository(Vehicle) private vehicleRepository: Repository<Vehicle>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createBookingDto: CreateBookingDto) {
+    const user =
+      (await this.userRepository.findOneBy({
+        user_id: createBookingDto.userId,
+      })) || undefined;
+    const vehicle =
+      (await this.vehicleRepository.findOneBy({
+        vehicle_id: createBookingDto.vehicleId,
+      })) || undefined;
+
+    const booking = this.bookingRepository.create({
+      booking_date: createBookingDto.booking_date,
+      return_date: createBookingDto.return_date,
+      status: createBookingDto.status,
+      user: user,
+      vehicle: vehicle,
+    });
     return await this.bookingRepository
-      .save(createBookingDto)
-      .then((booking) => {
-        return booking;
+      .save(booking)
+      .then((savedBooking) => {
+        return `Booking created successfully with ID ${savedBooking.booking_id}`;
+      })
+      .catch((error) => {
+        console.error('Error creating booking:', error);
+        throw new Error('Failed to create booking');
       });
   }
 
-  async findAll(string?: string):Promise<Booking[] | string> {
+  async findAll(string?: string): Promise<Booking[] | string> {
     if (string) {
       return await this.bookingRepository.find({
         order: {
-          booking_id:'ASC'
+          booking_id: 'ASC',
         },
         relations: {
           user: true,
@@ -34,8 +57,8 @@ export class BookingsService {
     }
     return await this.bookingRepository
       .find({
-         order: {
-          booking_id:'ASC'
+        order: {
+          booking_id: 'ASC',
         },
         relations: {
           user: true,
@@ -55,32 +78,28 @@ export class BookingsService {
       });
   }
 
-  async findOne(booking_id: number):Promise<Booking | string> {
-    return await this.bookingRepository
-      .findOne({
+  async findOne(booking_id: number): Promise<Booking> {
+    try {
+      const booking = await this.bookingRepository.findOne({
         where: { booking_id },
-        relations: {
-          user: true,
-          vehicle: true,
-          payment: true,
-        },
-         order: {
-          booking_id:'ASC'
-        },
-      })
-      .then((booking) => {
-        if (!booking) {
-          return `Booking with ID ${booking_id} not found`;
-        }
-        return booking;
-      })
-      .catch((error) => {
-        console.error('Error fetching booking:', error);
-        throw new Error(`Failed to fetch booking with ID ${booking_id}`);
+        relations: ['user', 'vehicle', 'payment'],
       });
+
+      if (!booking) {
+        throw new Error(`Booking with ID ${booking_id} not found`);
+      }
+
+      return booking;
+    } catch (error: unknown) {
+      console.error('Error fetching booking:', error);
+      throw new Error(`Failed to fetch booking with ID ${booking_id}`);
+    }
   }
 
-  async update(id: number, updateBookingDto: UpdateBookingDto): Promise<string> {
+  async update(
+    id: number,
+    updateBookingDto: UpdateBookingDto,
+  ): Promise<string> {
     return await this.bookingRepository
       .update(id, updateBookingDto)
       .then((result) => {
@@ -95,7 +114,7 @@ export class BookingsService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.bookingRepository
       .delete(id)
       .then((result) => {

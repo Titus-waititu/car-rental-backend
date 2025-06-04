@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   OneToOne,
+  Relation,
 } from 'typeorm';
 import { Rating } from 'src/ratings/entities/rating.entity';
 import { Testimonial } from 'src/testimonials/entities/testimonial.entity';
@@ -56,20 +57,20 @@ export class User {
   //retaltion to bookings table
 
   @OneToMany(() => Booking, (booking) => booking.user)
-  bookings: Booking[];
+  bookings: Relation<Booking[]>;
 
   @OneToMany(() => Payment, (payment) => payment.user)
-  payments: Payment[];
+  payments: Relation<Payment[]>;
 
   @OneToMany(() => Rating, (rating) => rating.user)
-  ratings: Rating[];
+  ratings: Relation<Rating[]>;
 
   @OneToMany(() => Testimonial, (test) => test.user)
-  testimonials: Testimonial[];
+  testimonials: Relation<Testimonial[]>;
 
   @OneToMany(() => ContactUsQuery, (contact) => contact.user)
-  contactus: ContactUsQuery[];
+  contactus: Relation<ContactUsQuery[]>;
 
   @OneToOne(() => Subscriber, (subscriber) => subscriber.user)
-  subscribers: Subscriber;
+  subscribers: Relation<Subscriber>;
 }

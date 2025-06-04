@@ -23,16 +23,16 @@ export class PaymentsService {
       });
   }
 
-  async findAll():Promise<Payment[] | string> {
+  async findAll(): Promise<Payment[] | string> {
     return this.paymentsRepository
       .find({
         order: {
           payment_id: 'ASC', // Sort by payment_id in ascending order
         },
         relations: {
-          booking:true,
-          user:true
-        }
+          booking: true,
+          user: true,
+        },
       })
       .then((payments) => {
         if (payments.length === 0) {
@@ -46,14 +46,18 @@ export class PaymentsService {
       });
   }
 
-  async findOne(payment_id: number):Promise<Payment | string> {
+  async findOne(payment_id: number): Promise<Payment | string> {
     return this.paymentsRepository
-      .findOne({ where: { payment_id }, relations: {
-          booking:true,
-          user:true
-        }, order: {
-          payment_id: 'ASC', 
-        }, })
+      .findOne({
+        where: { payment_id },
+        relations: {
+          booking: true,
+          user: true,
+        },
+        order: {
+          payment_id: 'ASC',
+        },
+      })
       .then((payment) => {
         if (!payment) {
           return `Payment with ID ${payment_id} not found.`;
@@ -66,7 +70,10 @@ export class PaymentsService {
       });
   }
 
-  async update(id: number, updatePaymentDto: UpdatePaymentDto):Promise<string> {
+  async update(
+    id: number,
+    updatePaymentDto: UpdatePaymentDto,
+  ): Promise<string> {
     return this.paymentsRepository
       .update(id, updatePaymentDto)
       .then((result) => {
@@ -81,7 +88,7 @@ export class PaymentsService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return this.paymentsRepository
       .delete(id)
       .then((result) => {

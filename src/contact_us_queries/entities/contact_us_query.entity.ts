@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 
 export enum QueryStatus {
@@ -34,11 +35,11 @@ export class ContactUsQuery {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.contactus)
+  @ManyToOne(() => User, (user) => user.contactus, { nullable: true,onDelete: 'CASCADE' })
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 
-  @ManyToOne(() => GuestUser, (guest) => guest.contactus)
+  @ManyToOne(() => GuestUser, (guest) => guest.contactus, { nullable: true,onDelete: 'CASCADE' })
   @JoinColumn()
-  guest: GuestUser;
+  guest: Relation<GuestUser>;
 }

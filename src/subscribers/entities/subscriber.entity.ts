@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -23,11 +24,17 @@ export class Subscriber {
   })
   subscribed_at: Date;
 
-  @OneToOne(() => User, (user) => user.subscribers)
+  @OneToOne(() => User, (user) => user.subscribers, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 
-  @OneToOne(() => GuestUser, (guest) => guest.subscriber)
+  @OneToOne(() => GuestUser, (guest) => guest.subscriber, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn()
-  guestUser: GuestUser;
+  guestUser: Relation<GuestUser>;
 }

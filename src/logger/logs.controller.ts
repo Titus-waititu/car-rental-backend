@@ -6,12 +6,12 @@ export class LogsController {
   constructor(private readonly logsService: LogsService) {}
 
   @Get()
-  async getLogs(): Promise<string> {
-    return await this.logsService.readLogs();
+  getLogs(): string {
+    return this.logsService.readLogs();
   }
 
   @Delete()
-  async clearLogs(): Promise<string> {
-    return await this.logsService.clearLogs();
+  clearLogs(): string {
+    return this.logsService.clearLogs();
   }
 }

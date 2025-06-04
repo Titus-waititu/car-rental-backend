@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -24,5 +25,5 @@ export class VehicleBrand {
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicle_brand)
   @JoinColumn()
-  vehicles: Vehicle[];
+  vehicles: Relation<Vehicle[]>;
 }

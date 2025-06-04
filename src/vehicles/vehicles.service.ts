@@ -22,13 +22,13 @@ export class VehiclesService {
       });
   }
 
-  async findAll():Promise<Vehicle[] | string> {
+  async findAll(): Promise<Vehicle[] | string> {
     return await this.vehiclesRepository
       .find({
         order: {
           vehicle_id: 'ASC', // Sort by vehicle_id in ascending order
         },
-        relations: ['vehicle_brand', 'ratings','booking'],
+        relations: ['vehicle_brand', 'ratings', 'booking'],
       })
       .then((vehicles) => {
         if (vehicles.length === 0) {
@@ -42,11 +42,11 @@ export class VehiclesService {
       });
   }
 
-  async findOne(id: number):Promise<Vehicle | string> {
+  async findOne(id: number): Promise<Vehicle | string> {
     return await this.vehiclesRepository
       .findOne({
         where: { vehicle_id: id },
-        relations: ['vehicle_brand', 'ratings','booking'],
+        relations: ['vehicle_brand', 'ratings', 'booking'],
       })
       .then((vehicle) => {
         if (!vehicle) {
@@ -60,7 +60,10 @@ export class VehiclesService {
       });
   }
 
-  async update(id: number, updateVehicleDto: UpdateVehicleDto):Promise<string> {
+  async update(
+    id: number,
+    updateVehicleDto: UpdateVehicleDto,
+  ): Promise<string> {
     return await this.vehiclesRepository
       .update(id, updateVehicleDto)
       .then((result) => {
@@ -75,7 +78,7 @@ export class VehiclesService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.vehiclesRepository
       .delete(id)
       .then((result) => {

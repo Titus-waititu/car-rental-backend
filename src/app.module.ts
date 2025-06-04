@@ -10,29 +10,21 @@ import { BookingsModule } from './bookings/bookings.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { ContactUsQueriesModule } from './contact_us_queries/contact_us_queries.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './logger.middleware';
 import { DatabaseModule } from './database/database.module';
 import { PaymentsModule } from './payments/payments.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { SeedModule } from './seed/seed.module';
 import { LogsModule } from './logger/logs.module';
+import { CacheMeModule } from './cache-me/cache-me.module';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheableMemory } from 'cacheable';
+import { createKeyv, Keyv } from '@keyv/redis';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    //  TypeOrmModule.forRoot({
-    //   type:'postgres',
-    //   host:'localhost',
-    //   port:5432,
-    //   username:'postgres',
-    //   password: process.env.PASSWORD || '1234',
-    //   database:'car-rental',
-    //   entities:[User,Vehicle,VehicleBrand,Booking,Admin,ContactUsQuery
-    //   ,GuestUser,Subscriber,Testimonial],
-    //   synchronize:true,
-    //   autoLoadEntities:true
-
-    //  }),
     AdminsModule,
     UsersModule,
     GuestUsersModule,
@@ -47,9 +39,35 @@ import { LogsModule } from './logger/logs.module';
     RatingsModule,
     SeedModule,
     LogsModule,
+    CacheMeModule,
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (configService: ConfigService) => {
+        return {
+          ttl: 60000, // Default TTL for cache entries
+          stores: [
+            // Memory store for fast local access
+            new Keyv({
+              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
+            }),
+            // Redis store for distributed caching
+            createKeyv(configService.getOrThrow<string>('REDIS_URL')),
+          ],
+        };
+      },
+    }),
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: CacheInterceptor, //global cache interceptor
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

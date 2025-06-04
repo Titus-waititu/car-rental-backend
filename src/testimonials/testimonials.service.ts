@@ -23,14 +23,14 @@ export class TestimonialsService {
       });
   }
 
-  async findAll():Promise<Testimonial[] | string> {
+  async findAll(): Promise<Testimonial[] | string> {
     return await this.testimonialsRepository
       .find({
         order: {
-          testimonial_id: 'ASC', 
+          testimonial_id: 'ASC',
         },
         relations: {
-          user:true
+          user: true,
         },
       })
       .then((testimonials) => {
@@ -45,11 +45,14 @@ export class TestimonialsService {
       });
   }
 
-  async findOne(id: number):Promise<Testimonial | string> {
+  async findOne(id: number): Promise<Testimonial | string> {
     return await this.testimonialsRepository
-      .findOne({ where: { testimonial_id: id },relations: {
-          user:true
-        }, })
+      .findOne({
+        where: { testimonial_id: id },
+        relations: {
+          user: true,
+        },
+      })
       .then((testimonial) => {
         if (!testimonial) {
           return `Testimonial with ID ${id} not found.`;
@@ -62,7 +65,10 @@ export class TestimonialsService {
       });
   }
 
-  async update(id: number, updateTestimonialDto: UpdateTestimonialDto):Promise<string> {
+  async update(
+    id: number,
+    updateTestimonialDto: UpdateTestimonialDto,
+  ): Promise<string> {
     return await this.testimonialsRepository
       .update(id, updateTestimonialDto)
       .then((result) => {
@@ -77,7 +83,7 @@ export class TestimonialsService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.testimonialsRepository
       .delete(id)
       .then((result) => {

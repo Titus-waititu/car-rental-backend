@@ -1,4 +1,3 @@
-import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 import {
@@ -7,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -27,11 +27,11 @@ export class Rating {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.ratings)
+  @ManyToOne(() => User, (user) => user.ratings,{onDelete: 'CASCADE'})
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.ratings)
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.ratings,{onDelete: 'CASCADE'})
   @JoinColumn()
-  vehicle: Vehicle;
+  vehicle: Relation<Vehicle>;
 }

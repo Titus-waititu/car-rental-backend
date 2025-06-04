@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   OneToOne,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -26,10 +27,10 @@ export class GuestUser {
   phone_number: string;
 
   @OneToMany(() => ContactUsQuery, (contact) => contact.guest)
-  contactus: ContactUsQuery[];
+  contactus: Relation<ContactUsQuery[]>;
 
   @OneToOne(() => Subscriber, (subscriber) => subscriber.guestUser)
-  subscriber: Subscriber;
+  subscriber: Relation<Subscriber>;
 
   // @OneToMany(()=>ContactUsQuery)
 }

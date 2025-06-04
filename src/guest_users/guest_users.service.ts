@@ -23,15 +23,15 @@ export class GuestUsersService {
       });
   }
 
-  async findAll(): Promise<GuestUser[] | string>  {
+  async findAll(): Promise<GuestUser[] | string> {
     return await this.guestRepository
       .find({
         order: {
           guest_id: 'ASC',
         },
         relations: {
-          contactus:true,
-          subscriber:true
+          contactus: true,
+          subscriber: true,
         },
       })
       .then((guestUsers) => {
@@ -54,8 +54,8 @@ export class GuestUsersService {
         },
         where: { guest_id: id },
         relations: {
-          contactus:true,
-          subscriber:true
+          contactus: true,
+          subscriber: true,
         },
       })
       .then((guestUser) => {
@@ -70,7 +70,10 @@ export class GuestUsersService {
       });
   }
 
-  async update(id: number, updateGuestUserDto: UpdateGuestUserDto):Promise<string> {
+  async update(
+    id: number,
+    updateGuestUserDto: UpdateGuestUserDto,
+  ): Promise<string> {
     return await this.guestRepository
       .update(id, updateGuestUserDto)
       .then((result) => {
@@ -85,7 +88,7 @@ export class GuestUsersService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.guestRepository
       .delete(id)
       .then((result) => {

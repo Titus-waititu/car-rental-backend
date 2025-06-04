@@ -25,7 +25,7 @@ export class AdminsService {
       });
   }
 
-  async findAll(email?: string) :Promise<Admin[] | string>{
+  async findAll(email?: string): Promise<Admin[] | string> {
     if (email) {
       return await this.adminRepository.find({
         where: {

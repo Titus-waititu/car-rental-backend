@@ -1,10 +1,4 @@
-import {
-  IsDate,
-  IsDateString,
-  IsEmail,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsEmail, IsString } from 'class-validator';
 
 export class CreateAdminDto {
   @IsString()

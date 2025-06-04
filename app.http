@@ -1,17 +1,303 @@
-@url = https://car-rental-backend-1-5axa.onrender.com
+@url = http://localhost:8000/api
 
-###
+### Root
+GET {{url}}/
+
+### Admins
 GET {{url}}/admins
 
 ###
-POST {{url}}/seed
+GET {{url}}/admins/1
+
 ###
 POST {{url}}/admins
 Content-Type: application/json
 
 {
-    "username":"Kamau",
-    "password":"1234",
-    "email":"kamaa@gmail.com",
-    "last_login":"2025-05-23"
+    "username": "testadmin",
+    "password": "testpass",
+    "email": "admin@example.com"
 }
+
+###
+PATCH {{url}}/admins/1
+Content-Type: application/json
+
+{
+    "username": "updatedadmin"
+}
+
+###
+DELETE {{url}}/admins/1
+
+### Users
+GET {{url}}/users
+
+###
+GET {{url}}/users/1
+
+###
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "testpass",
+    "email": "user@example.com"
+}
+
+###
+PATCH {{url}}/users/1
+Content-Type: application/json
+
+{
+    "username": "updateduser"
+}
+
+###
+DELETE {{url}}/users/1
+
+### Guest Users
+GET {{url}}/guest-users
+
+###
+GET {{url}}/guest-users/1
+
+###
+POST {{url}}/guest-users
+Content-Type: application/json
+
+{
+    "name": "Guest Name"
+}
+
+###
+PATCH {{url}}/guest-users/1
+Content-Type: application/json
+
+{
+    "name": "Updated Guest"
+}
+
+###
+DELETE {{url}}/guest-users/1
+
+### Vehicle Brands
+GET {{url}}/vehicle-brands
+
+###
+GET {{url}}/vehicle-brands/1
+
+###
+POST {{url}}/vehicle-brands
+Content-Type: application/json
+
+{
+    "name": "Brand Name"
+}
+
+###
+PATCH {{url}}/vehicle-brands/1
+Content-Type: application/json
+
+{
+    "name": "Updated Brand"
+}
+
+###
+DELETE {{url}}/vehicle-brands/1
+
+### Vehicles
+GET {{url}}/vehicles
+
+###
+GET {{url}}/vehicles/1
+
+###
+POST {{url}}/vehicles
+Content-Type: application/json
+
+{
+    "brandId": 1,
+    "model": "Model X"
+}
+
+###
+PATCH {{url}}/vehicles/1
+Content-Type: application/json
+
+{
+    "model": "Updated Model"
+}
+
+###
+DELETE {{url}}/vehicles/1
+
+### Bookings
+GET {{url}}/bookings
+
+###
+GET {{url}}/bookings/1
+
+###
+POST {{url}}/bookings
+Content-Type: application/json
+
+{
+    "vehicleId": 1,
+    "userId": 1,
+    "status": "confirmed",
+    "booking_date": "2025-05-23",
+    "return_date": "2025-05-30"
+}
+
+###
+PATCH {{url}}/bookings/1
+Content-Type: application/json
+
+{
+    "status": "cancelled"
+}
+
+###
+DELETE {{url}}/bookings/1
+
+### Testimonials
+GET {{url}}/testimonials
+GET {{url}}/testimonials/1
+POST {{url}}/testimonials
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "content": "Great service!"
+}
+
+###
+PATCH {{url}}/testimonials/1
+Content-Type: application/json
+
+{
+    "content": "Updated testimonial"
+}
+
+###
+DELETE {{url}}/testimonials/1
+
+### Contact Us Queries
+GET {{url}}/contact-us-queries
+
+###
+GET {{url}}/contact-us-queries/1
+
+###
+POST {{url}}/contact-us-queries
+Content-Type: application/json
+
+{
+    "message": "I have a question."
+}
+
+###
+PATCH {{url}}/contact-us-queries/1
+Content-Type: application/json
+
+{
+    "message": "Updated question."
+}
+
+###
+DELETE {{url}}/contact-us-queries/1
+
+### Subscribers
+GET {{url}}/subscribers
+
+###
+GET {{url}}/subscribers/35
+
+###
+POST {{url}}/subscribers
+Content-Type: application/json
+
+{
+    "email": "subscriber@example.com"
+}
+
+###
+PATCH {{url}}/subscribers/1
+Content-Type: application/json
+
+{
+    "email": "updated@example.com"
+}
+
+###
+DELETE {{url}}/subscribers/1
+
+### Payments
+GET {{url}}/payments
+
+###
+GET {{url}}/payments/13
+
+###
+POST {{url}}/payments
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "amount": 100
+}
+###
+PATCH {{url}}/payments/1
+Content-Type: application/json
+
+{
+    "amount": 200
+}
+###
+DELETE {{url}}/payments/1
+
+### Ratings
+GET {{url}}/ratings
+###
+GET {{url}}/ratings/1
+###
+POST {{url}}/ratings
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "vehicleId": 1,
+    "score": 5
+}
+###
+PATCH {{url}}/ratings/1
+Content-Type: application/json
+
+{
+    "score": 4
+}
+###
+DELETE {{url}}/ratings/1
+
+### Seed
+POST {{url}}/seed
+
+### Logs
+GET {{url}}/logs
+###
+DELETE {{url}}/logs
+
+### Cache
+POST {{url}}/cache
+Content-Type: application/json
+
+{
+    "key": "testkey",
+    "value": "testvalue"
+}
+###
+GET {{url}}/cache/testkey
+###
+DELETE {{url}}/cache/testkey

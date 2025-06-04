@@ -8,6 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  Relation,
 } from 'typeorm';
 
 export enum BookingStatus {
@@ -34,19 +35,24 @@ export class Booking {
   @Column({ type: 'timestamp' })
   return_date: Date;
 
-  @ManyToOne(() => User, (user) => user.bookings, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.bookings, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 
   @OneToOne(() => Vehicle, (vehicle) => vehicle.booking, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn()
-  vehicle: Vehicle;
+  vehicle: Relation<Vehicle>;
 
   @OneToOne(() => Payment, (payment) => payment.booking, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn()
-  payment: Payment;
+  payment: Relation<Payment>;
 }

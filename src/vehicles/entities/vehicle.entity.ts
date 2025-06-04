@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -34,12 +35,12 @@ export class Vehicle {
   })
   created_at: Date;
 
-  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicles)
-  vehicle_brand: VehicleBrand;
+  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicles,{onDelete: 'CASCADE'})
+  vehicle_brand: Relation<VehicleBrand>;
 
   @OneToOne(() => Booking, (booking) => booking.vehicle)
-  booking: Booking;
+  booking: Relation<Booking>;
 
   @OneToMany(() => Rating, (rating) => rating.vehicle)
-  ratings: Rating[];
+  ratings: Relation<Rating[]>;
 }

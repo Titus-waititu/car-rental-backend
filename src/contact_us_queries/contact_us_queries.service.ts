@@ -1,29 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { CreateContactUsQueryDto } from './dto/create-contact_us_query.dto';
 import { UpdateContactUsQueryDto } from './dto/update-contact_us_query.dto';
-import { ContactUsQuery } from './entities/contact_us_query.entity';
+import { ContactUsQuery, QueryStatus } from './entities/contact_us_query.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ContactUsQueriesService {
   constructor(
-    @InjectRepository(ContactUsQuery)
-    private contactUsQueryDto: Repository<ContactUsQuery>,
+    @InjectRepository(ContactUsQuery) private contactUsQueryDto: Repository<ContactUsQuery>,
+    @InjectRepository(User) private userQueryDto: Repository<User>,
+    @InjectRepository(GuestUser) private guestUserQueryDto: Repository<GuestUser>,
   ) {}
   async create(createContactUsQueryDto: CreateContactUsQueryDto) {
+    const user = await this.userQueryDto.findOne({
+      where: { user_id: createContactUsQueryDto.userId },
+    });
+    const guest = await this.guestUserQueryDto.findOne({
+      where: { guest_id: createContactUsQueryDto.guestId },
+    });
+    const { query_message, created_at, status } = createContactUsQueryDto;
     return await this.contactUsQueryDto
-      .save(createContactUsQueryDto)
-      .then((contactUsQuery) => {
-        return contactUsQuery;
+      .save({
+        query_message,
+        created_at,
+        status: status || QueryStatus.pending, // Use enum value for default
+        user: user || undefined,
+        guest: guest || undefined,
+      })
+      .then((contactUsQuery: ContactUsQuery) => {
+        return `Contact us query with ID ${contactUsQuery.query_id} created successfully`;
+      })
+      .catch((error) => {
+        console.error('Error creating contact us query:', error);
+        throw new Error('Failed to create contact us query');
       });
   }
 
-  async findAll():Promise<ContactUsQuery[] | string> {
+  async findAll(): Promise<ContactUsQuery[] | string> {
     return await this.contactUsQueryDto
       .find({
-        order:{
-          query_id:'ASC'
+        order: {
+          query_id: 'ASC',
         },
         relations: {
           user: true,
@@ -41,16 +61,16 @@ export class ContactUsQueriesService {
       });
   }
 
-  async findOne(query_id: number):Promise<ContactUsQuery | string> {
+  async findOne(query_id: number): Promise<ContactUsQuery | string> {
     return await this.contactUsQueryDto
       .findOne({
-          order:{
-          query_id:'ASC'
+        order: {
+          query_id: 'ASC',
         },
         where: { query_id },
         relations: {
           user: true,
-          guest:true
+          guest: true,
         },
       })
       .then((contactUsQuery) => {
@@ -65,7 +85,10 @@ export class ContactUsQueriesService {
       });
   }
 
-  async update(id: number, updateContactUsQueryDto: UpdateContactUsQueryDto):Promise<string> {
+  async update(
+    id: number,
+    updateContactUsQueryDto: UpdateContactUsQueryDto,
+  ): Promise<string> {
     return await this.contactUsQueryDto
       .update(id, updateContactUsQueryDto)
       .then((result) => {
@@ -80,7 +103,7 @@ export class ContactUsQueriesService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.contactUsQueryDto
       .delete(id)
       .then((result) => {

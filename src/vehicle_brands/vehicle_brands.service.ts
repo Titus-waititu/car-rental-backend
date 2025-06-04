@@ -23,11 +23,11 @@ export class VehicleBrandsService {
       });
   }
 
-  async findAll():Promise<VehicleBrand[]| string> {
+  async findAll(): Promise<VehicleBrand[] | string> {
     return await this.vehicleBrandsRepository
       .find({
         order: {
-          brand_id: 'ASC', 
+          brand_id: 'ASC',
         },
         relations: ['vehicles'],
       })
@@ -43,7 +43,7 @@ export class VehicleBrandsService {
       });
   }
 
-  async findOne(id: number):Promise<VehicleBrand | string> {
+  async findOne(id: number): Promise<VehicleBrand | string> {
     return await this.vehicleBrandsRepository
       .findOne({ where: { brand_id: id } })
       .then((vehicleBrand) => {
@@ -58,7 +58,10 @@ export class VehicleBrandsService {
       });
   }
 
-  async update(id: number, updateVehicleBrandDto: UpdateVehicleBrandDto) :Promise< string>{
+  async update(
+    id: number,
+    updateVehicleBrandDto: UpdateVehicleBrandDto,
+  ): Promise<string> {
     return await this.vehicleBrandsRepository
       .update(id, updateVehicleBrandDto)
       .then((result) => {
@@ -73,7 +76,7 @@ export class VehicleBrandsService {
       });
   }
 
-  async remove(id: number):Promise<string> {
+  async remove(id: number): Promise<string> {
     return await this.vehicleBrandsRepository
       .delete(id)
       .then((result) => {

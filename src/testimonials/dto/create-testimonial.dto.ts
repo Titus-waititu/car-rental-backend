@@ -1,10 +1,4 @@
-import {
-  IsDate,
-  IsDateString,
-  IsEnum,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export enum TestimonialStatus {
   active = 'active',
