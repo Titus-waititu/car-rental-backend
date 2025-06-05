@@ -4,35 +4,64 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
-  async create(createUserDto: CreateUserDto): Promise<string> {
-    const userEntity = this.usersRepository.create(createUserDto);
-    try {
-      const user: User = await this.usersRepository.save(userEntity);
-      return `User with ID ${user.user_id} created successfully.`;
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw new Error('Failed to create user.');
-    }
+
+  //helper methods
+
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
   }
 
-  async findAll(): Promise<User[] | string> {
+  private excludeSensitiveData(user: User): Partial<User> {
+    const { password, hashedRefreshToken, ...userWithoutSensitiveData } = user;
+    return userWithoutSensitiveData;
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+      select: ['user_id', 'email'],
+    });
+
+    if (existingUser) {
+      throw new Error (`User with email ${createUserDto.email} already exists.`);
+    }
+
+    const newUser = {
+      ...createUserDto,
+      password: await this.hashPassword(createUserDto.password),
+    };
+    const savedUser = await this.usersRepository
+      .save(newUser)
+      .then((user) => {
+        return user;
+      })
+      .catch((error) => {
+        console.error('Error creating user:', error);
+        throw new Error('Failed to create user.');
+      });
+    return this.excludeSensitiveData(savedUser);
+  }
+
+  async findAll(): Promise<Partial<User[] | string>> {
     return await this.usersRepository
       .find({
         order: { user_id: 'ASC' },
-        relations: [
-          'subscribers',
-          'bookings',
-          'ratings',
-          'testimonials',
-          'contactus',
-          'payments',
-        ],
+        relations: {
+          subscribers: true,
+          bookings: true,
+          ratings: true,
+          testimonials: true,
+          contactus: true,
+          payments: true,
+        },
       })
       .then((users) => {
         if (users.length === 0) {

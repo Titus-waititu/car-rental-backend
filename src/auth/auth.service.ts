@@ -1,26 +1,149 @@
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as Bycrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) { }
+
+  // Helper method to generates access and refresh tokens for the user
+  private async getTokens(userId: number, email: string) {
+    const [at, rt] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email: email,
+        },
+        {
+          secret: this.configService.getOrThrow<string>(
+            'JWT_ACCESS_TOKEN_SECRET',
+          ),
+          expiresIn: this.configService.getOrThrow<string>(
+            'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+          ), // 15 minutes
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email: email,
+        },
+        {
+          secret: this.configService.getOrThrow<string>(
+            'JWT_REFRESH_TOKEN_SECRET',
+          ),
+          expiresIn: this.configService.getOrThrow<string>(
+            'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+          ), // 60, "2 days", "10h", "7d"
+        },
+      ),
+    ]);
+    return { accessToken: at, refreshToken: rt };
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  // Helper method to hashes the password using bcrypt
+  private async hashData(data: string): Promise<string> {
+    const salt = await Bycrypt.genSalt(10);
+    return await Bycrypt.hash(data, salt);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  // Helper method to remove password from profile
+  private async saveRefreshToken(userId: number, refreshToken: string) {
+    // hash refresh token
+    const hashedRefreshToken = await this.hashData(refreshToken);
+    // save hashed refresh token in the database
+    await this.userRepository.update(userId, {
+      hashedRefreshToken: hashedRefreshToken,
+    });
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
+  // Method to sign in the user
+  async signIn(createAuthDto: CreateAuthDto) {
+    // check if the user exists in the database
+    const foundUser = await this.userRepository.findOne({
+      where: { email: createAuthDto.email },
+      select: ['user_id', 'email', 'password'], // Only select necessary fields
+    });
+    if (!foundUser) {
+      throw new NotFoundException(
+        `User with email ${createAuthDto.email} not found`,
+      );
+    }
+    // compare hashed password with the password provided
+    const foundPassword = await Bycrypt.compare(
+      createAuthDto.password,
+      foundUser.password,
+    );
+    if (!foundPassword) {
+      throw new NotFoundException('Invalid credentials');
+    }
+    // if correct generate tokens
+    const { accessToken, refreshToken } = await this.getTokens(
+      foundUser.user_id,
+      foundUser.email,
+    );
+
+    // save refresh token in the database
+    await this.saveRefreshToken(foundUser.user_id, refreshToken);
+    // return the tokens
+    return { accessToken, refreshToken };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  // Method to sign out the user
+  async signOut(userId: string) {
+    // set user refresh token to null
+    const res = await this.userRepository.update(userId, {
+      hashedRefreshToken: null,
+    });
+
+    if (res.affected === 0) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    return { message: `User with id : ${userId} signed out successfully` };
+  }
+
+  // Method to refresh tokens
+  async refreshTokens(id: number, refreshToken: string) {
+    // get user
+    const foundUser = await this.userRepository.findOne({
+      where: { user_id: id },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    if (!foundUser.hashedRefreshToken) {
+      throw new NotFoundException('No refresh token found');
+    }
+
+    // check if the refresh token is valid
+    const refreshTokenMatches = await Bycrypt.compare(
+      refreshToken,
+      foundUser.hashedRefreshToken,
+    );
+
+    if (!refreshTokenMatches) {
+      throw new NotFoundException('Invalid refresh token');
+    }
+    // generate new tokens
+    const { accessToken, refreshToken: newRefreshToken } = await this.getTokens(
+      foundUser.user_id,
+      foundUser.email,
+    );
+    // save new refresh token in the database
+    await this.saveRefreshToken(foundUser.user_id, newRefreshToken);
+    // return the new tokens
+    return { accessToken, refreshToken: newRefreshToken };
   }
 }

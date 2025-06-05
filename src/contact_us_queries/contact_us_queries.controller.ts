@@ -11,7 +11,10 @@ import {
 import { ContactUsQueriesService } from './contact_us_queries.service';
 import { CreateContactUsQueryDto } from './dto/create-contact_us_query.dto';
 import { UpdateContactUsQueryDto } from './dto/update-contact_us_query.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
 @Controller('contact-us-queries')
 export class ContactUsQueriesController {
   constructor(

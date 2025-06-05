@@ -1,6 +1,8 @@
 import { Controller, Get, Delete } from '@nestjs/common';
 import { LogsService } from './logs.service';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@Public()
 @Controller('logs')
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}

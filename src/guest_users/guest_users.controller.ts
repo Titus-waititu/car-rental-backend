@@ -11,7 +11,9 @@ import {
 import { GuestUsersService } from './guest_users.service';
 import { CreateGuestUserDto } from './dto/create-guest_user.dto';
 import { UpdateGuestUserDto } from './dto/update-guest_user.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('guest-users')
 export class GuestUsersController {
   constructor(private readonly guestUsersService: GuestUsersService) {}

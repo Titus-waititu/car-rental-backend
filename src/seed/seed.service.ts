@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { faker } from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 import { User, UserStatus } from 'src/users/entities/user.entity';
 import { Admin } from 'src/admins/entities/admin.entity';
 import { GuestUser } from 'src/guest_users/entities/guest_user.entity';

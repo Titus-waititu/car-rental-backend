@@ -4,22 +4,42 @@ import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subscriber } from './entities/subscriber.entity';
 import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
 
 @Injectable()
 export class SubscribersService {
   constructor(
-    @InjectRepository(Subscriber)
-    private subscribersRepository: Repository<Subscriber>,
+    @InjectRepository(Subscriber) private subscribersRepository: Repository<Subscriber>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(GuestUser) private guestRepository: Repository<GuestUser>,
   ) {}
   async create(createSubscriberDto: CreateSubscriberDto) {
+    const user = await this.userRepository.findOne({
+      where: { user_id: createSubscriberDto.userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${createSubscriberDto.userId} not found.`);
+    }
+    const guestUser = await this.guestRepository.findOne({
+      where: { guest_id: createSubscriberDto.guestUserId },
+    });
+    if (!guestUser) {
+      throw new Error(`Guest User with ID ${createSubscriberDto.guestUserId} not found.`);
+    }
+    const subscriber = this.subscribersRepository.create({
+      ...createSubscriberDto,
+      user: user,
+      guestUser: guestUser,
+    });
     return this.subscribersRepository
-      .save(createSubscriberDto)
-      .then((subscriber) => {
-        return subscriber;
+      .save(subscriber)
+      .then((savedSubscriber) => {
+        return `Subscriber with ID ${savedSubscriber.subscriber_id} created successfully.`;
       })
       .catch((error) => {
         console.error('Error creating subscriber:', error);
-        throw new Error('Failed to create subscriber');
+        throw new Error('Failed to create subscriber.');
       });
   }
 

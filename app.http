@@ -1,13 +1,20 @@
 @url = http://localhost:8000/api
 
 ### Root
+@AccessToken  = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkxMjQ2ODYsImV4cCI6MTc0OTEyNTU4Nn0.Rt2gzpbrqTm_PuxeCYC66zb_O-jSBk5OL9Ut1JNkqHE
+
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkxMDkwMzEsImV4cCI6MTc0OTcxMzgzMX0.VVovmnB_52sExFYcXK6tVNd1CusKVRz4JcRW0F3fpwA
+
+###
 GET {{url}}/
 
 ### Admins
 GET {{url}}/admins
+Authorization: Bearer {{AccessToken}}
 
 ###
 GET {{url}}/admins/1
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/admins
@@ -32,18 +39,25 @@ DELETE {{url}}/admins/1
 
 ### Users
 GET {{url}}/users
+Authorization: Bearer {{AccessToken}}
 
 ###
-GET {{url}}/users/1
+GET {{url}}/users/12
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/users
 Content-Type: application/json
 
 {
-    "username": "testuser",
+    
     "password": "testpass",
-    "email": "user@example.com"
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "status": "active",
+    "phone_number": "1234567890",
+    "profile_picture": "http://example.com/profile.jpg"
 }
 
 ###
@@ -57,26 +71,51 @@ Content-Type: application/json
 ###
 DELETE {{url}}/users/1
 
+
+###
+
+### LOGIN a new user
+POST {{url}}/auth/signin
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "testpass"
+}
+
+###
+GET {{url}}/users
+Authorization: Bearer {{AccessToken}}
+
+### refresh token
+GET {{url}}/auth/refresh?id=22
+Authorization: Bearer {{RefreshToken}}
 ### Guest Users
 GET {{url}}/guest-users
 
 ###
-GET {{url}}/guest-users/1
+GET {{url}}/guest-users/22
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/guest-users
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "name": "Guest Name"
+    "first_name": "Jammal",
+    "last_name": "Doe",
+    "email": "jam@gmail.com",
+    "phone_number": "1234567890"
 }
 
 ###
-PATCH {{url}}/guest-users/1
+PATCH {{url}}/guest-users/22
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "name": "Updated Guest"
+    "first_name": "Updated Guest"
 }
 
 ###
@@ -86,14 +125,16 @@ DELETE {{url}}/guest-users/1
 GET {{url}}/vehicle-brands
 
 ###
-GET {{url}}/vehicle-brands/1
+GET {{url}}/vehicle-brands/11
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/vehicle-brands
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "name": "Brand Name"
+    "brand_name": "Mercedez-Benz"
 }
 
 ###
@@ -109,17 +150,23 @@ DELETE {{url}}/vehicle-brands/1
 
 ### Vehicles
 GET {{url}}/vehicles
+Authorization: Bearer {{AccessToken}}
 
 ###
-GET {{url}}/vehicles/1
+GET {{url}}/vehicles/21
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/vehicles
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "brandId": 1,
-    "model": "Model X"
+    "vehicle_brandId": 11,
+    "model": "Model X",
+    "color": "Red",
+    "price_per_day": 100,
+    "availability": true
 }
 
 ###
@@ -131,21 +178,25 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/vehicles/1
+DELETE {{url}}/vehicles/3
+Authorization: Bearer {{AccessToken}}
 
 ### Bookings
 GET {{url}}/bookings
+Authorization: Bearer {{AccessToken}}
 
 ###
-GET {{url}}/bookings/1
+GET {{url}}/bookings/13
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/bookings
 Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
 
 {
-    "vehicleId": 1,
-    "userId": 1,
+    "vehicleId": 4,
+    "userId": 3,
     "status": "confirmed",
     "booking_date": "2025-05-23",
     "return_date": "2025-05-30"
@@ -160,17 +211,27 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/bookings/1
+DELETE {{url}}/bookings/4
+Authorization: Bearer {{AccessToken}}
 
 ### Testimonials
 GET {{url}}/testimonials
+Authorization: Bearer {{AccessToken}}
+
+###
 GET {{url}}/testimonials/1
+Authorization: Bearer {{AccessToken}}
+
+###
 POST {{url}}/testimonials
 Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
 
 {
-    "userId": 1,
-    "content": "Great service!"
+    "userId": 12,
+    "testimonial": "Great service!",
+    "status": "active",
+    "created_at": "2025-05-23T10:00:00Z"
 }
 
 ###
@@ -186,16 +247,19 @@ DELETE {{url}}/testimonials/1
 
 ### Contact Us Queries
 GET {{url}}/contact-us-queries
+Authorization: Bearer {{AccessToken}}
 
 ###
 GET {{url}}/contact-us-queries/1
+Authorization: Bearer {{AccessToken}}
 
 ###
 POST {{url}}/contact-us-queries
 Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
 
 {
-    "message": "I have a question."
+    "query_message": "I have a question."
 }
 
 ###
@@ -218,9 +282,11 @@ GET {{url}}/subscribers/35
 ###
 POST {{url}}/subscribers
 Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
 
 {
-    "email": "subscriber@example.com"
+    "email": "subscriber@example.com",
+    "userId": 13
 }
 
 ###
@@ -228,7 +294,8 @@ PATCH {{url}}/subscribers/1
 Content-Type: application/json
 
 {
-    "email": "updated@example.com"
+    "email": "updated@example.com",
+    
 }
 
 ###
@@ -291,6 +358,7 @@ DELETE {{url}}/logs
 
 ### Cache
 POST {{url}}/cache
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {

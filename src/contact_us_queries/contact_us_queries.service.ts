@@ -14,7 +14,7 @@ export class ContactUsQueriesService {
     @InjectRepository(User) private userQueryDto: Repository<User>,
     @InjectRepository(GuestUser) private guestUserQueryDto: Repository<GuestUser>,
   ) {}
-  async create(createContactUsQueryDto: CreateContactUsQueryDto) {
+  async create(createContactUsQueryDto: CreateContactUsQueryDto): Promise<string> {
     const user = await this.userQueryDto.findOne({
       where: { user_id: createContactUsQueryDto.userId },
     });

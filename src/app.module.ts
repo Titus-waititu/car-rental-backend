@@ -17,11 +17,12 @@ import { PaymentsModule } from './payments/payments.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { SeedModule } from './seed/seed.module';
 import { LogsModule } from './logger/logs.module';
-import { CacheMeModule } from './cache-me/cache-me.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { CacheableMemory } from 'cacheable';
 import { createKeyv, Keyv } from '@keyv/redis';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { AtGuard } from './auth/guards/at.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -39,7 +40,6 @@ import { AuthModule } from './auth/auth.module';
     RatingsModule,
     SeedModule,
     LogsModule,
-    CacheMeModule,
     CacheModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -59,6 +59,7 @@ import { AuthModule } from './auth/auth.module';
       },
     }),
     AuthModule,
+    
   ],
   controllers: [AppController],
   providers: [
@@ -66,6 +67,14 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: 'APP_INTERCEPTOR',
       useClass: CacheInterceptor, //global cache interceptor
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard, // Global guard to protect routes
+    },
+     {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
   ],
 })

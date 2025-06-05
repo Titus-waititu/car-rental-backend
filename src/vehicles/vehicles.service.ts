@@ -4,21 +4,33 @@ import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle } from './entities/vehicle.entity';
 import { Repository } from 'typeorm';
+import { VehicleBrand } from 'src/vehicle_brands/entities/vehicle_brand.entity';
 
 @Injectable()
 export class VehiclesService {
   constructor(
     @InjectRepository(Vehicle) private vehiclesRepository: Repository<Vehicle>,
+    @InjectRepository(VehicleBrand) private vehicleBrandRepository: Repository<VehicleBrand>,
   ) {}
   async create(createVehicleDto: CreateVehicleDto) {
-    return await this.vehiclesRepository
-      .save(createVehicleDto)
-      .then((vehicle) => {
-        return vehicle;
+    const vehicleBrand = await this.vehicleBrandRepository.findOne({
+      where: { brand_id: createVehicleDto.vehicle_brandId },
+    });
+    if (!vehicleBrand) {
+      throw new Error(`Vehicle brand with ID ${createVehicleDto.vehicle_brandId} not found.`);
+    }
+    const vehicle = this.vehiclesRepository.create({
+      ...createVehicleDto,
+      vehicle_brand: vehicleBrand,
+    });
+    return this.vehiclesRepository
+      .save(vehicle)
+      .then((savedVehicle) => {
+        return `Vehicle with ID ${savedVehicle.vehicle_id} created successfully.`;
       })
       .catch((error) => {
         console.error('Error creating vehicle:', error);
-        throw new Error('Failed to create vehicle');
+        throw new Error('Failed to create vehicle.');
       });
   }
 
@@ -28,7 +40,7 @@ export class VehiclesService {
         order: {
           vehicle_id: 'ASC', // Sort by vehicle_id in ascending order
         },
-        relations: ['vehicle_brand', 'ratings', 'booking'],
+        relations: ['vehicle_brand'],
       })
       .then((vehicles) => {
         if (vehicles.length === 0) {
@@ -46,7 +58,7 @@ export class VehiclesService {
     return await this.vehiclesRepository
       .findOne({
         where: { vehicle_id: id },
-        relations: ['vehicle_brand', 'ratings', 'booking'],
+        relations: ['vehicle_brand'],
       })
       .then((vehicle) => {
         if (!vehicle) {

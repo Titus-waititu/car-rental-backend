@@ -14,7 +14,7 @@ export class BookingsService {
     @InjectRepository(Vehicle) private vehicleRepository: Repository<Vehicle>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  async create(createBookingDto: CreateBookingDto) {
+  async create(createBookingDto: CreateBookingDto): Promise<string> {
     const user =
       (await this.userRepository.findOneBy({
         user_id: createBookingDto.userId,

@@ -54,6 +54,9 @@ export class User {
   })
   last_login: Date;
 
+  @Column({ type: 'text', nullable: true, default: null })
+  hashedRefreshToken: string | null;
+
   //retaltion to bookings table
 
   @OneToMany(() => Booking, (booking) => booking.user)

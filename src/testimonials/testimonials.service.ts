@@ -4,22 +4,33 @@ import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Testimonial } from './entities/testimonial.entity';
 import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class TestimonialsService {
   constructor(
-    @InjectRepository(Testimonial)
-    private testimonialsRepository: Repository<Testimonial>,
+    @InjectRepository(Testimonial) private testimonialsRepository: Repository<Testimonial>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createTestimonialDto: CreateTestimonialDto) {
-    return await this.testimonialsRepository
-      .save(createTestimonialDto)
-      .then((testimonial) => {
-        return testimonial;
+    const user = await this.userRepository.findOne({
+      where: { user_id: createTestimonialDto.userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${createTestimonialDto.userId} not found.`);
+    }
+    const testimonial = this.testimonialsRepository.create({
+      ...createTestimonialDto,
+      user: user,
+    });
+    return this.testimonialsRepository
+      .save(testimonial)
+      .then((savedTestimonial) => {
+        return `Testimonial with ID ${savedTestimonial.testimonial_id} created successfully.`;
       })
       .catch((error) => {
         console.error('Error creating testimonial:', error);
-        throw new Error('Failed to create testimonial');
+        throw new Error('Failed to create testimonial.');
       });
   }
 

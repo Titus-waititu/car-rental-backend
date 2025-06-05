@@ -12,12 +12,16 @@ import {
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { ApiBearerAuth, ApiProperty } from '@nestjs/swagger';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@ApiBearerAuth()
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
+  @Public()
   create(@Body() createAdminDto: CreateAdminDto) {
     console.log(createAdminDto);
     return this.adminsService.create(createAdminDto);

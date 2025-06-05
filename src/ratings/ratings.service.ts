@@ -4,17 +4,40 @@ import { UpdateRatingDto } from './dto/update-rating.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rating } from './entities/rating.entity';
 import { Repository } from 'typeorm';
+import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class RatingsService {
   constructor(
     @InjectRepository(Rating) private ratingsRepository: Repository<Rating>,
+    @InjectRepository(Vehicle) private vehicleRepository: Repository<Vehicle>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createRatingDto: CreateRatingDto) {
+
+    const vehicle = await this.vehicleRepository.findOne({
+      where: { vehicle_id: createRatingDto.vehicleId },
+    });
+    if (!vehicle) {
+      throw new Error(`Vehicle with ID ${createRatingDto.vehicleId} not found.`);
+    }
+    const user = await this.userRepository.findOne({
+      where: { user_id: createRatingDto.userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${createRatingDto.userId} not found.`);
+    }
+
+    const rating = this.ratingsRepository.create({
+      ...createRatingDto,
+      vehicle: vehicle,
+      user: user,
+    });
     return this.ratingsRepository
-      .save(createRatingDto)
-      .then((rating) => {
-        return `Rating with ID ${rating.rating_id} created successfully.`;
+      .save(rating)
+      .then((savedRating) => {
+        return `Rating with ID ${savedRating.rating_id} created successfully.`;
       })
       .catch((error) => {
         console.error('Error creating rating:', error);

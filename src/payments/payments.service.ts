@@ -4,18 +4,39 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './entities/payment.entity';
+import { Booking } from 'src/bookings/entities/booking.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PaymentsService {
   constructor(
-    @InjectRepository(Payment)
-    private paymentsRepository: Repository<Payment>,
+    @InjectRepository(Payment) private paymentsRepository: Repository<Payment>,
+    @InjectRepository(Booking) private bookingsRepository: Repository<Booking>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createPaymentDto: CreatePaymentDto) {
+    const user = await this.userRepository.findOne({
+      where: { user_id: createPaymentDto.userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${createPaymentDto.userId} not found.`);
+    }
+
+    const booking = await this.bookingsRepository.findOne({
+      where: { booking_id: createPaymentDto.bookingId },
+    });
+    if (!booking) {
+      throw new Error(`Booking with ID ${createPaymentDto.bookingId} not found.`);
+    }
+    const payment = this.paymentsRepository.create({
+      ...createPaymentDto,
+      user: user,
+      booking: booking,
+    });
     return this.paymentsRepository
-      .save(createPaymentDto)
-      .then((payment) => {
-        return payment;
+      .save(payment)
+      .then((savedPayment) => {
+        return `Payment with ID ${savedPayment.payment_id} created successfully.`;
       })
       .catch((error) => {
         console.error('Error creating payment:', error);
