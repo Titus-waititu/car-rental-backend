@@ -3,7 +3,7 @@ import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class CreateVehicleBrandDto {
   @IsString()
-  @ApiProperty  ({
+  @ApiProperty({
     description: 'The name of the vehicle brand',
     example: 'Toyota',
   })

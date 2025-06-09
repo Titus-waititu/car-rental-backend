@@ -31,7 +31,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new Error (`User with email ${createUserDto.email} already exists.`);
+      throw new Error(`User with email ${createUserDto.email} already exists.`);
     }
 
     const newUser = {

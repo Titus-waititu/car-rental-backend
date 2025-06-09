@@ -1,4 +1,3 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,15 +13,15 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
-  // Helper method to generates access and refresh tokens for the user
-  private async getTokens(userId: number, email: string) {
+  private async getTokens(userId: number, email: string,role:string) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           email: email,
+          role:role
         },
         {
           secret: this.configService.getOrThrow<string>(
@@ -30,13 +29,14 @@ export class AuthService {
           ),
           expiresIn: this.configService.getOrThrow<string>(
             'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-          ), // 15 minutes
+          ),
         },
       ),
       this.jwtService.signAsync(
         {
           sub: userId,
           email: email,
+          role:role
         },
         {
           secret: this.configService.getOrThrow<string>(
@@ -44,14 +44,13 @@ export class AuthService {
           ),
           expiresIn: this.configService.getOrThrow<string>(
             'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
-          ), // 60, "2 days", "10h", "7d"
+          ), 
         },
       ),
     ]);
     return { accessToken: at, refreshToken: rt };
   }
 
-  // Helper method to hashes the password using bcrypt
   private async hashData(data: string): Promise<string> {
     const salt = await Bycrypt.genSalt(10);
     return await Bycrypt.hash(data, salt);
@@ -59,27 +58,22 @@ export class AuthService {
 
   // Helper method to remove password from profile
   private async saveRefreshToken(userId: number, refreshToken: string) {
-    // hash refresh token
     const hashedRefreshToken = await this.hashData(refreshToken);
-    // save hashed refresh token in the database
     await this.userRepository.update(userId, {
       hashedRefreshToken: hashedRefreshToken,
     });
   }
 
-  // Method to sign in the user
   async signIn(createAuthDto: CreateAuthDto) {
-    // check if the user exists in the database
     const foundUser = await this.userRepository.findOne({
       where: { email: createAuthDto.email },
-      select: ['user_id', 'email', 'password'], // Only select necessary fields
+      select: ['user_id', 'email', 'password','role'], 
     });
     if (!foundUser) {
       throw new NotFoundException(
         `User with email ${createAuthDto.email} not found`,
       );
     }
-    // compare hashed password with the password provided
     const foundPassword = await Bycrypt.compare(
       createAuthDto.password,
       foundUser.password,
@@ -91,6 +85,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.getTokens(
       foundUser.user_id,
       foundUser.email,
+      foundUser.role, 
     );
 
     // save refresh token in the database
@@ -117,6 +112,7 @@ export class AuthService {
     // get user
     const foundUser = await this.userRepository.findOne({
       where: { user_id: id },
+      select: ['user_id', 'email', 'hashedRefreshToken', 'role'],
     });
 
     if (!foundUser) {
@@ -140,6 +136,7 @@ export class AuthService {
     const { accessToken, refreshToken: newRefreshToken } = await this.getTokens(
       foundUser.user_id,
       foundUser.email,
+      foundUser.role, 
     );
     // save new refresh token in the database
     await this.saveRefreshToken(foundUser.user_id, newRefreshToken);

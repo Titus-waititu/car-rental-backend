@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateContactUsQueryDto } from './dto/create-contact_us_query.dto';
 import { UpdateContactUsQueryDto } from './dto/update-contact_us_query.dto';
-import { ContactUsQuery, QueryStatus } from './entities/contact_us_query.entity';
+import {
+  ContactUsQuery,
+  QueryStatus,
+} from './entities/contact_us_query.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
@@ -10,11 +13,15 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class ContactUsQueriesService {
   constructor(
-    @InjectRepository(ContactUsQuery) private contactUsQueryDto: Repository<ContactUsQuery>,
+    @InjectRepository(ContactUsQuery)
+    private contactUsQueryDto: Repository<ContactUsQuery>,
     @InjectRepository(User) private userQueryDto: Repository<User>,
-    @InjectRepository(GuestUser) private guestUserQueryDto: Repository<GuestUser>,
+    @InjectRepository(GuestUser)
+    private guestUserQueryDto: Repository<GuestUser>,
   ) {}
-  async create(createContactUsQueryDto: CreateContactUsQueryDto): Promise<string> {
+  async create(
+    createContactUsQueryDto: CreateContactUsQueryDto,
+  ): Promise<string> {
     const user = await this.userQueryDto.findOne({
       where: { user_id: createContactUsQueryDto.userId },
     });

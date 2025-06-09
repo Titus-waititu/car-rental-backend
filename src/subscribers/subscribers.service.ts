@@ -10,7 +10,8 @@ import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
 @Injectable()
 export class SubscribersService {
   constructor(
-    @InjectRepository(Subscriber) private subscribersRepository: Repository<Subscriber>,
+    @InjectRepository(Subscriber)
+    private subscribersRepository: Repository<Subscriber>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(GuestUser) private guestRepository: Repository<GuestUser>,
   ) {}
@@ -25,7 +26,9 @@ export class SubscribersService {
       where: { guest_id: createSubscriberDto.guestUserId },
     });
     if (!guestUser) {
-      throw new Error(`Guest User with ID ${createSubscriberDto.guestUserId} not found.`);
+      throw new Error(
+        `Guest User with ID ${createSubscriberDto.guestUserId} not found.`,
+      );
     }
     const subscriber = this.subscribersRepository.create({
       ...createSubscriberDto,

@@ -10,14 +10,17 @@ import { VehicleBrand } from 'src/vehicle_brands/entities/vehicle_brand.entity';
 export class VehiclesService {
   constructor(
     @InjectRepository(Vehicle) private vehiclesRepository: Repository<Vehicle>,
-    @InjectRepository(VehicleBrand) private vehicleBrandRepository: Repository<VehicleBrand>,
+    @InjectRepository(VehicleBrand)
+    private vehicleBrandRepository: Repository<VehicleBrand>,
   ) {}
   async create(createVehicleDto: CreateVehicleDto) {
     const vehicleBrand = await this.vehicleBrandRepository.findOne({
       where: { brand_id: createVehicleDto.vehicle_brandId },
     });
     if (!vehicleBrand) {
-      throw new Error(`Vehicle brand with ID ${createVehicleDto.vehicle_brandId} not found.`);
+      throw new Error(
+        `Vehicle brand with ID ${createVehicleDto.vehicle_brandId} not found.`,
+      );
     }
     const vehicle = this.vehiclesRepository.create({
       ...createVehicleDto,

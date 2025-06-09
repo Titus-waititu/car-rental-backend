@@ -35,7 +35,9 @@ export class Vehicle {
   })
   created_at: Date;
 
-  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicles,{onDelete: 'CASCADE'})
+  @ManyToOne(() => VehicleBrand, (brand) => brand.vehicles, {
+    onDelete: 'CASCADE',
+  })
   vehicle_brand: Relation<VehicleBrand>;
 
   @OneToOne(() => Booking, (booking) => booking.vehicle)

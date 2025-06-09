@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export enum QueryStatus {
   resolved = 'resolved',
@@ -13,7 +19,7 @@ export class CreateContactUsQueryDto {
     required: false,
   })
   @IsNumber()
-   @IsOptional()
+  @IsOptional()
   guestId?: number;
 
   @IsNumber()

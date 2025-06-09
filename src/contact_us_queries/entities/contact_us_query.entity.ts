@@ -35,11 +35,17 @@ export class ContactUsQuery {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.contactus, { nullable: true,onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.contactus, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: Relation<User>;
 
-  @ManyToOne(() => GuestUser, (guest) => guest.contactus, { nullable: true,onDelete: 'CASCADE' })
+  @ManyToOne(() => GuestUser, (guest) => guest.contactus, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   guest: Relation<GuestUser>;
 }

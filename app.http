@@ -1,48 +1,16 @@
 @url = http://localhost:8000/api
 
 ### Root
-@AccessToken  = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkxMjQ2ODYsImV4cCI6MTc0OTEyNTU4Nn0.Rt2gzpbrqTm_PuxeCYC66zb_O-jSBk5OL9Ut1JNkqHE
-
+@AccessToken  = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ5NDc4MTIyLCJleHAiOjE3NDk0NzkwMjJ9.1jMc8gkwdsQCIdv3DJYFBHjAso01nQLsJTrVn4lTDSc
 @RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkxMDkwMzEsImV4cCI6MTc0OTcxMzgzMX0.VVovmnB_52sExFYcXK6tVNd1CusKVRz4JcRW0F3fpwA
 
 ###
-GET {{url}}/
 
-### Admins
-GET {{url}}/admins
-Authorization: Bearer {{AccessToken}}
-
-###
-GET {{url}}/admins/1
-Authorization: Bearer {{AccessToken}}
-
-###
-POST {{url}}/admins
-Content-Type: application/json
-
-{
-    "username": "testadmin",
-    "password": "testpass",
-    "email": "admin@example.com"
-}
-
-###
-PATCH {{url}}/admins/1
-Content-Type: application/json
-
-{
-    "username": "updatedadmin"
-}
-
-###
-DELETE {{url}}/admins/1
-
-### Users
 GET {{url}}/users
 Authorization: Bearer {{AccessToken}}
 
 ###
-GET {{url}}/users/12
+GET {{url}}/users/1
 Authorization: Bearer {{AccessToken}}
 
 ###
@@ -56,6 +24,22 @@ Content-Type: application/json
     "first_name": "John",
     "last_name": "Doe",
     "status": "active",
+    "phone_number": "1234567890",
+    "profile_picture": "http://example.com/profile.jpg"
+}
+
+###
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    
+    "password": "testpass",
+    "email": "admin@example.com",
+    "first_name": "Jerry",
+    "last_name": "Kim",
+    "status": "active",
+    "role": "admin",
     "phone_number": "1234567890",
     "profile_picture": "http://example.com/profile.jpg"
 }
@@ -79,7 +63,7 @@ POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
+  "email": "admin@example.com",
   "password": "testpass"
 }
 

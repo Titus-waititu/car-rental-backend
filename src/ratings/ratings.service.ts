@@ -15,12 +15,13 @@ export class RatingsService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createRatingDto: CreateRatingDto) {
-
     const vehicle = await this.vehicleRepository.findOne({
       where: { vehicle_id: createRatingDto.vehicleId },
     });
     if (!vehicle) {
-      throw new Error(`Vehicle with ID ${createRatingDto.vehicleId} not found.`);
+      throw new Error(
+        `Vehicle with ID ${createRatingDto.vehicleId} not found.`,
+      );
     }
     const user = await this.userRepository.findOne({
       where: { user_id: createRatingDto.userId },

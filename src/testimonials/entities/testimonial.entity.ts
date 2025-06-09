@@ -34,7 +34,10 @@ export class Testimonial {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.testimonials, { nullable: true ,onDelete: 'CASCADE'})
+  @ManyToOne(() => User, (user) => user.testimonials, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: Relation<User>;
 }

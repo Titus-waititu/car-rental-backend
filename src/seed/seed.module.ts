@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SeedService } from './seed.service';
 import { SeedController } from './seed.controller';
-import { Admin } from 'src/admins/entities/admin.entity';
+// import { Admin } from 'src/admins/entities/admin.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { ContactUsQuery } from 'src/contact_us_queries/entities/contact_us_query.entity';
 import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
@@ -17,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Admin,
+      // Admin,
       Booking,
       ContactUsQuery,
       GuestUser,

@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AdminsModule } from './admins/admins.module';
+// import { AdminsModule } from './admins/admins.module';
 import { UsersModule } from './users/users.module';
 import { GuestUsersModule } from './guest_users/guest_users.module';
 import { VehicleBrandsModule } from './vehicle_brands/vehicle_brands.module';
@@ -23,10 +23,11 @@ import { createKeyv, Keyv } from '@keyv/redis';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AtGuard } from './auth/guards/at.guard';
+import { RolesGuard } from './auth/guards';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    AdminsModule,
+    // AdminsModule,
     UsersModule,
     GuestUsersModule,
     VehicleBrandsModule,
@@ -59,20 +60,15 @@ import { AtGuard } from './auth/guards/at.guard';
       },
     }),
     AuthModule,
-    
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
-      provide: 'APP_INTERCEPTOR',
-      useClass: CacheInterceptor, //global cache interceptor
-    },
-    {
       provide: APP_GUARD,
       useClass: AtGuard, // Global guard to protect routes
     },
-     {
+    {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },

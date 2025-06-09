@@ -18,6 +18,14 @@ export enum UserStatus {
   inactive = 'inactive',
 }
 
+export enum UserRole {
+  ADMIN= 'admin',
+  USER = 'user',
+  DRIVER = 'driver',
+  AGENT= 'agent',
+  MANAGER='manager'
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -43,6 +51,13 @@ export class User {
 
   @Column()
   phone_number: string;
+
+  @Column({
+    type:'enum',
+    enum:UserRole,
+    default:UserRole.USER
+  })
+  role:UserRole
 
   @Column()
   profile_picture: string;

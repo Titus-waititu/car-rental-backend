@@ -9,7 +9,8 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class TestimonialsService {
   constructor(
-    @InjectRepository(Testimonial) private testimonialsRepository: Repository<Testimonial>,
+    @InjectRepository(Testimonial)
+    private testimonialsRepository: Repository<Testimonial>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async create(createTestimonialDto: CreateTestimonialDto) {

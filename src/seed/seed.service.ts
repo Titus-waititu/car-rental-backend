@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {faker} from '@faker-js/faker';
-import { User, UserStatus } from 'src/users/entities/user.entity';
-import { Admin } from 'src/admins/entities/admin.entity';
+import { faker } from '@faker-js/faker';
+import { User, UserRole, UserStatus } from 'src/users/entities/user.entity';
+// import { Admin } from 'src/admins/entities/admin.entity';
 import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
 import { Rating } from 'src/ratings/entities/rating.entity';
 import { Subscriber } from 'src/subscribers/entities/subscriber.entity';
@@ -30,8 +30,8 @@ export class SeedService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectRepository(Admin)
-    private readonly adminRepository: Repository<Admin>,
+    // @InjectRepository(Admin)
+    // private readonly adminRepository: Repository<Admin>,
     @InjectRepository(GuestUser)
     private readonly guestUserRepository: Repository<GuestUser>,
     @InjectRepository(Rating)
@@ -78,6 +78,13 @@ export class SeedService {
         email: faker.internet.email(),
         password: faker.internet.password(),
         phone_number: faker.phone.number(),
+        role:faker.helpers.arrayElement([
+          UserRole.USER,
+          UserRole.ADMIN,
+          UserRole.AGENT,
+          UserRole.MANAGER,
+          UserRole.DRIVER,
+        ]),
         profile_picture: faker.image.avatar(),
         status: faker.helpers.arrayElement([
           UserStatus.active,
@@ -92,17 +99,17 @@ export class SeedService {
     this.logger.log('seeding into admins');
 
     // Admins
-    for (let i = 0; i < 3; i++) {
-      const admin = this.adminRepository.create({
-        username: faker.internet.userName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        last_login: faker.date.past(),
-      });
-      await this.adminRepository.save(admin);
-    }
+    // for (let i = 0; i < 3; i++) {
+    //   const admin = this.adminRepository.create({
+    //     username: faker.internet.userName(),
+    //     email: faker.internet.email(),
+    //     password: faker.internet.password(),
+    //     last_login: faker.date.past(),
+    //   });
+    //   await this.adminRepository.save(admin);
+    // }
 
-    this.logger.log('seeding into admins complete');
+    // this.logger.log('seeding into admins complete');
     this.logger.log('seeding into guest users');
 
     // // Guest Users

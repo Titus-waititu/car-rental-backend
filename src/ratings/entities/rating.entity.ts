@@ -27,11 +27,13 @@ export class Rating {
   })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.ratings,{onDelete: 'CASCADE'})
+  @ManyToOne(() => User, (user) => user.ratings, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: Relation<User>;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.ratings,{onDelete: 'CASCADE'})
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.ratings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   vehicle: Relation<Vehicle>;
 }

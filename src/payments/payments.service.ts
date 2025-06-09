@@ -26,7 +26,9 @@ export class PaymentsService {
       where: { booking_id: createPaymentDto.bookingId },
     });
     if (!booking) {
-      throw new Error(`Booking with ID ${createPaymentDto.bookingId} not found.`);
+      throw new Error(
+        `Booking with ID ${createPaymentDto.bookingId} not found.`,
+      );
     }
     const payment = this.paymentsRepository.create({
       ...createPaymentDto,

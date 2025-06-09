@@ -52,11 +52,14 @@ export class Payment {
   })
   payment_date: Date;
 
-  @OneToOne(() => Booking, (book) => book.payment,{onDelete: 'CASCADE'})
+  @OneToOne(() => Booking, (book) => book.payment, { onDelete: 'CASCADE' })
   @JoinColumn()
   booking: Relation<Booking>;
 
-  @ManyToOne(() => User, (user) => user.payments,{onDelete: 'CASCADE', nullable: true })
+  @ManyToOne(() => User, (user) => user.payments, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn()
   user: Relation<User>;
 }
