@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -50,7 +50,21 @@ export class UsersService {
     return this.excludeSensitiveData(savedUser);
   }
 
-  async findAll(): Promise<Partial<User[] | string>> {
+  async findAll(search?: string): Promise<Partial<User[] | string>> {
+    if (search) {
+     const cleanSearch = search?.toLocaleLowerCase().trim();
+      const users  = await this.usersRepository.find({
+        where: [
+          { first_name: ILike(`%${cleanSearch}%`) },
+          { last_name: ILike(`%${cleanSearch}%`) },
+          { email: ILike(`%${cleanSearch}%`) },
+        ],
+      })
+      if (users.length === 0) {
+        return `No users found matching the search term "${search}".`;
+      }
+      return users;
+    }
     return await this.usersRepository
       .find({
         order: { user_id: 'ASC' },

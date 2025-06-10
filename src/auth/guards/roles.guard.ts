@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     @InjectRepository(User)
-    private profileRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -35,15 +35,12 @@ export class RolesGuard implements CanActivate {
       return false; 
     }
 
-    const userProfile = await this.profileRepository.findOne({
-      where: { user_id: user.sub },
-      select: ['user_id', 'role'],
-    });
+    const userRole = context.switchToHttp().getRequest<UserRequest>().user?.role;
 
-    if (!userProfile) {
+    if (!userRole) {
       return false; 
     }
 
-    return requiredRoles.some((role) => userProfile.role === role);
+    return requiredRoles.some((role) => userRole === role);
   }
 }

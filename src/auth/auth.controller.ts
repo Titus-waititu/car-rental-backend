@@ -14,9 +14,12 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { AtGuard } from './guards/at.guard';
-import { RtGuard } from './guards/rt.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from './guards';
+import { Roles } from './decorators/roles.decorator';
+import { UserRole } from 'src/users/entities/user.entity';
+import { ForgotPasswordDto } from './dto/forgotpassword.dto';
+import { ResetPasswordDto } from './dto/resetpassword.dto';
 
 export interface RequestWithUser extends Request {
   user: {
@@ -26,6 +29,9 @@ export interface RequestWithUser extends Request {
   };
 }
 
+@ApiBearerAuth()
+@ApiTags('auth')
+@UseGuards(RolesGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -55,5 +61,19 @@ export class AuthController {
       throw new UnauthorizedException('Invalid user');
     }
     return this.authService.refreshTokens(id, user.refreshToken);
+  }
+
+  @Post('forgot-password')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async forgotPassword(@Body() forgotPassword: ForgotPasswordDto): Promise<string> {
+    return this.authService.forgotPassword(forgotPassword);
+  }
+
+  @Post('reset-password')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<string> {
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

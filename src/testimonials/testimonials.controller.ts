@@ -11,9 +11,10 @@ import {
 import { TestimonialsService } from './testimonials.service';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
+@ApiTags('testimonials')
 @Controller('testimonials')
 export class TestimonialsController {
   constructor(private readonly testimonialsService: TestimonialsService) {}

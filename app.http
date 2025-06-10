@@ -1,8 +1,8 @@
-@url = http://localhost:8000/api
+@url = http://localhost:8000/api/v1
 
 ### Root
-@AccessToken  = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ5NDc4MTIyLCJleHAiOjE3NDk0NzkwMjJ9.1jMc8gkwdsQCIdv3DJYFBHjAso01nQLsJTrVn4lTDSc
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDkxMDkwMzEsImV4cCI6MTc0OTcxMzgzMX0.VVovmnB_52sExFYcXK6tVNd1CusKVRz4JcRW0F3fpwA
+@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NjYwNDUsImV4cCI6MTc0OTU2OTA0NX0.HxvioFiYTVzEvz8pR2BzwEHFaNkL3NaiAWcvCvgTmcw
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NjYwNDUsImV4cCI6MTc1MDE3MDg0NX0.1o-mgQDhxnAysjeHFhmvgxBKN220pM0aFrEVFy20iKA
 
 ###
 
@@ -44,6 +44,22 @@ Content-Type: application/json
     "profile_picture": "http://example.com/profile.jpg"
 }
 
+
+###
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    
+    "password": "testpass",
+    "email": "andreastailas96@gmail.com",
+    "first_name": "Andreas",
+    "last_name": "Tailas",
+    "status": "active",
+    "role": "admin",
+    "phone_number": "1234567890",
+    "profile_picture": "http://example.com/profile.jpg"
+}
 ###
 PATCH {{url}}/users/1
 Content-Type: application/json
@@ -63,10 +79,29 @@ POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
-  "password": "testpass"
+  "email": "andreastailas96@gmail.com",
+  "password": "newpassword123"
 }
 
+###
+POST {{url}}/auth/reset-password
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "newPassword": "newpassword123",
+    "confirmPassword": "newpassword123",
+    "token":"{{RefreshToken}}"
+}
+
+###
+POST {{url}}/auth/forgot-password
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "email": "andreastailas96@gmail.com"
+}
 ###
 GET {{url}}/users
 Authorization: Bearer {{AccessToken}}

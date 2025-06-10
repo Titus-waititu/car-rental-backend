@@ -11,9 +11,10 @@ import {
 import { VehicleBrandsService } from './vehicle_brands.service';
 import { CreateVehicleBrandDto } from './dto/create-vehicle_brand.dto';
 import { UpdateVehicleBrandDto } from './dto/update-vehicle_brand.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
+@ApiTags('vehicle brands')
 @Controller('vehicle-brands')
 export class VehicleBrandsController {
   constructor(private readonly vehicleBrandsService: VehicleBrandsService) {}

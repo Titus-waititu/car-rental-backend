@@ -8,18 +8,19 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { AtGuard } from '../auth/guards/at.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from './entities/user.entity';
 
 @ApiBearerAuth()
+@ApiTags('users')
 @UseGuards(RolesGuard)
 @Controller('users')
 export class UsersController {
@@ -33,18 +34,28 @@ export class UsersController {
 
   @Get()
   @Roles(UserRole.ADMIN)
-  // @UseGuards(AtGuard)
-  findAll() {
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search users by name or email',
+    type: String,
+  })
+  findAll(@Query('search') search?: string) {
+    if (search) {
+      return this.usersService.findAll(search);
+    }
+    // If no search query is provided, return all users
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.USER)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(UserRole.ADMIN, UserRole.USER)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -53,6 +64,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.ADMIN, UserRole.USER)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
   }

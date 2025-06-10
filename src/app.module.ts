@@ -23,7 +23,7 @@ import { createKeyv, Keyv } from '@keyv/redis';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AtGuard } from './auth/guards/at.guard';
-import { RolesGuard } from './auth/guards';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -60,6 +60,21 @@ import { RolesGuard } from './auth/guards';
       },
     }),
     AuthModule,
+    ThrottlerModule.forRootAsync({
+      imports:[ConfigModule],
+      inject: [ConfigService],
+      useFactory:(configService: ConfigService) => [
+        {
+          ttl: configService.getOrThrow<number>('THROTTLE_TTL', { infer: true }),
+          limit: configService.getOrThrow<number>('THROTTLE_LIMIT', { infer: true }),
+          ignoreUserAgents:[
+            /^curl\//,
+            /^PostmanRuntime\//,
+          ]
+        }
+      ]
+    
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -72,6 +87,10 @@ import { RolesGuard } from './auth/guards';
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+    {
+      provide:APP_GUARD,
+      useClass:ThrottlerGuard
+    }
   ],
 })
 export class AppModule implements NestModule {

@@ -10,6 +10,7 @@ import { AtStrategy } from './strategies/at.strategy';
 import { RfStrategy } from './strategies/rt.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RolesGuard } from './guards';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { RolesGuard } from './guards';
     PassportModule, // Register PassportModule for strategies
   ],
   controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RfStrategy, JwtStrategy,RolesGuard],
+  providers: [AuthService, AtStrategy, RfStrategy, JwtStrategy,RolesGuard,MailService],
   exports: [JwtModule,RolesGuard],
 })
 export class AuthModule {}

@@ -11,9 +11,10 @@ import {
 import { GuestUsersService } from './guest_users.service';
 import { CreateGuestUserDto } from './dto/create-guest_user.dto';
 import { UpdateGuestUserDto } from './dto/update-guest_user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
+@ApiTags('guest users')
 @Controller('guest-users')
 export class GuestUsersController {
   constructor(private readonly guestUsersService: GuestUsersService) {}
