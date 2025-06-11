@@ -24,7 +24,6 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AtGuard } from './auth/guards/at.guard';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { MpesaModule } from './mpesa/mpesa.module';
 import { ClaimsAuthModule } from './claims-auth/claims-auth.module';
 
 
@@ -79,7 +78,6 @@ import { ClaimsAuthModule } from './claims-auth/claims-auth.module';
         },
       ],
     }),
-    MpesaModule,
     ClaimsAuthModule,
   ],
   controllers: [AppController],

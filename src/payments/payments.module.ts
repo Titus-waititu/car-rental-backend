@@ -7,12 +7,14 @@ import { Payment } from './entities/payment.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ClaimsAuthModule } from 'src/claims-auth/claims-auth.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([Payment, Booking, User]),
     ClaimsAuthModule,
+    AuthModule,
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService],

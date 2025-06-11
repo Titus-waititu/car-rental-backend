@@ -1,7 +1,7 @@
 @url = http://localhost:8000/api/v1
 
 ### Root
-@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjUxNjUsImV4cCI6MTc0OTY2ODE2NX0.SwV4lbuYBq8WvqoVsBd8-_Wz1FBGIGnI-oHc0J0F-Uw
+@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjY1NDksImV4cCI6MTc0OTY2OTU0OX0.N2LxDyqHVCugXK27y2D77I8GHJQYnwQXu3fNc7ptFoI
 @RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjA4OTUsImV4cCI6MTc1MDI2NTY5NX0.5JJbKDhBb0L9Tt_EPPw4wyIyh9CCmbdBPDjPaRx2hew
 
 ###
@@ -9,8 +9,8 @@
 GET {{url}}/payments
 Authorization: Bearer {{AccessToken}}
 ###
-POST {{url}}/mpesa/stkpush
-# Authorization: Bearer {{AccessToken}}
+POST {{url}}/payments/stkpush
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
@@ -20,30 +20,16 @@ Content-Type: application/json
 }
 
 ###
-POST {{url}}/mpesa/callback
+# After running the above, copy the CheckoutRequestID from the response and paste it below
+POST {{url}}/payments/callback
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "Body": {
-        "stkCallback": {
-            "MerchantRequestID": "123456789",
-            "CheckoutRequestID": "987654321",
-            "ResultCode": 0,
-            "ResultDesc": "Success",
-            "CallbackMetadata": {
-                "Item": [
-                    {
-                        "Name": "Amount",
-                        "Value": 100
-                    },
-                    {
-                        "Name": "MpesaReceiptNumber",
-                        "Value": "ABC123"
-                    }
-                ]
-            }
-        }
-    }
+    "CheckoutRequestID": "ws_CO_1234567890",
+    "ResultCode": 0,
+    "ResultDesc": "Success",
+    "MerchantRequestID": "1234567890"
    
 }
 ###
