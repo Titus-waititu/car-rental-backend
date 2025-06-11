@@ -78,7 +78,7 @@ export class SeedService {
         email: faker.internet.email(),
         password: faker.internet.password(),
         phone_number: faker.phone.number(),
-        role:faker.helpers.arrayElement([
+        role: faker.helpers.arrayElement([
           UserRole.USER,
           UserRole.ADMIN,
           UserRole.AGENT,
@@ -163,24 +163,26 @@ export class SeedService {
     }
     this.logger.log('seeding into bookings complete');
     this.logger.log('seeding into payments');
-
-    // // Payments (ensure 1:1)
+    // // Payments
     for (const booking of bookings) {
       const payment = this.paymentRepository.create({
         user: booking.user,
         booking: booking,
         amount: faker.number.int({ min: 100, max: 1000 }),
-        payment_method: faker.helpers.arrayElement(
-          Object.values(PaymentMethod),
-        ),
-        payment_status: faker.helpers.arrayElement(
-          Object.values(PaymentStatus),
-        ),
-        transactionId: faker.number.int({ min: 100000000, max: 999999999 }),
-        payment_date: faker.date.past(),
+        payment_method: faker.helpers.arrayElement([
+          PaymentMethod.Cash,
+          PaymentMethod.CreditCard,
+          PaymentMethod.MPesa,
+        ]),
+        status: faker.helpers.arrayElement(Object.values(PaymentStatus)),
+        transactionDate: faker.date.past(),
+        phoneNumber: '2547' + faker.string.numeric('9'.repeat(9)),
+        mpesaReceiptNumber: faker.string.alphanumeric(10).toUpperCase(),
       });
+
       await this.paymentRepository.save(payment);
     }
+
     this.logger.log('seeding into payments complete');
     this.logger.log('seeding into ratings');
 

@@ -22,7 +22,14 @@ import { MailService } from 'src/mail/mail.service';
     PassportModule, // Register PassportModule for strategies
   ],
   controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RfStrategy, JwtStrategy,RolesGuard,MailService],
-  exports: [JwtModule,RolesGuard],
+  providers: [
+    AuthService,
+    AtStrategy,
+    RfStrategy,
+    JwtStrategy,
+    RolesGuard,
+    MailService,
+  ],
+  exports: [JwtModule, RolesGuard, AuthService],
 })
 export class AuthModule {}

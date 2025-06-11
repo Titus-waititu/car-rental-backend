@@ -16,8 +16,6 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from './guards';
-import { Roles } from './decorators/roles.decorator';
-import { UserRole } from 'src/users/entities/user.entity';
 import { ForgotPasswordDto } from './dto/forgotpassword.dto';
 import { ResetPasswordDto } from './dto/resetpassword.dto';
 
@@ -44,6 +42,7 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
+    @Public()
   @Get('signout/:id')
   signOut(@Param('id') id: string) {
     return this.authService.signOut(id);
@@ -52,6 +51,7 @@ export class AuthController {
   // /auth/refresh?id=1
   @ApiBearerAuth()
   @Get('refresh')
+    @Public()
   refreshTokens(
     @Query('id', ParseIntPipe) id: number,
     @Req() req: RequestWithUser,
@@ -64,13 +64,13 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  @Roles(UserRole.ADMIN, UserRole.USER)
+    @Public()
   async forgotPassword(@Body() forgotPassword: ForgotPasswordDto): Promise<string> {
     return this.authService.forgotPassword(forgotPassword);
   }
 
   @Post('reset-password')
-  @Roles(UserRole.ADMIN, UserRole.USER)
+    @Public()
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<string> {

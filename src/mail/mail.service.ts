@@ -104,4 +104,21 @@ export class MailService {
     return transporter.sendMail(mailOptions);
   }
 
+
+    async sendResetEmail(email: string, token: string) {
+    const resetLink = `http://localhost:8000/api/v1/auth/reset-password?token=${token}`;
+    const subject = 'Reset Your Password';
+    const text = `To reset your password, please send a POST request to the following URL:\n\n${resetLink}\n\nIf you did not request a password reset, please ignore this email.`
+    const html = `<p>To reset your password, please send a POST request to the following URL:</p><p><a href="${resetLink}">${resetLink}</a></p><p>If you did not request a password reset, please ignore this email.</p>`;
+    
+    await this.sendMail({
+      to: email,
+      subject: subject,
+      text: text,
+      html: html,
+    });
+    
+    return `Reset password email sent to ${email}`;
+  }
+  
 }

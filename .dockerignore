@@ -1,0 +1,92 @@
+# === Node.js ===
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# === Build Artifacts ===
+dist
+build
+coverage
+.cache
+
+# === Logs ===
+logs
+*.log
+*.log.*
+
+# === Environment Variables ===
+.env
+.env.*
+!.env.example
+
+# === Docker Files ===
+Dockerfile
+Dockerfile.*
+docker-compose.yml
+docker-compose.*.yml
+
+# === Test Files ===
+test
+*.spec.ts
+*.test.ts
+jest.config.js
+jest.config.ts
+coverage
+.nyc_output
+
+# === IDEs / Editors ===
+.idea
+.vscode
+*.sw?
+*.swo
+*.swp
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Docs / Misc ===
+docsnode_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+.env*
+!.env.example
+.nyc_output
+coverage
+.vscode
+.DS_Store
+*.md
+!package*.json
+!pnpm*.yaml
+applogs
+image
+test
+jest.config.js
+*.test.ts
+*.spec.ts
+*.md
+LICENSE
+README.md
+
+# === Others (optional, CI/CD or tooling) ===
+.npmrc
+.prettierrc
+.prettierrc.*
+.eslintrc
+.eslintrc.*
+.git
+.gitignore
+.gitattributes
+.editorconfig
+.turbo
+turbo.json
+tsconfig.build.tsbuildinfo
+*.tsbuildinfo

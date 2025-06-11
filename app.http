@@ -1,14 +1,51 @@
 @url = http://localhost:8000/api/v1
 
 ### Root
-@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NjYwNDUsImV4cCI6MTc0OTU2OTA0NX0.HxvioFiYTVzEvz8pR2BzwEHFaNkL3NaiAWcvCvgTmcw
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NjYwNDUsImV4cCI6MTc1MDE3MDg0NX0.1o-mgQDhxnAysjeHFhmvgxBKN220pM0aFrEVFy20iKA
+@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjUxNjUsImV4cCI6MTc0OTY2ODE2NX0.SwV4lbuYBq8WvqoVsBd8-_Wz1FBGIGnI-oHc0J0F-Uw
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjA4OTUsImV4cCI6MTc1MDI2NTY5NX0.5JJbKDhBb0L9Tt_EPPw4wyIyh9CCmbdBPDjPaRx2hew
 
 ###
 
-GET {{url}}/users
+GET {{url}}/payments
 Authorization: Bearer {{AccessToken}}
+###
+POST {{url}}/mpesa/stkpush
+# Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
 
+{
+    "phoneNum": "254712345678",
+    "amount": 100,
+    "accountRef": "Test123"
+}
+
+###
+POST {{url}}/mpesa/callback
+Content-Type: application/json
+
+{
+    "Body": {
+        "stkCallback": {
+            "MerchantRequestID": "123456789",
+            "CheckoutRequestID": "987654321",
+            "ResultCode": 0,
+            "ResultDesc": "Success",
+            "CallbackMetadata": {
+                "Item": [
+                    {
+                        "Name": "Amount",
+                        "Value": 100
+                    },
+                    {
+                        "Name": "MpesaReceiptNumber",
+                        "Value": "ABC123"
+                    }
+                ]
+            }
+        }
+    }
+   
+}
 ###
 GET {{url}}/users/1
 Authorization: Bearer {{AccessToken}}
@@ -80,23 +117,23 @@ Content-Type: application/json
 
 {
   "email": "andreastailas96@gmail.com",
-  "password": "newpassword123"
+  "password": "newpassword12"
 }
 
 ###
+@ResetToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk2MjU2MzcsImV4cCI6MTc0OTYyOTIzN30.sdmKrwKqTLgPvttx7hzMDt-p_r-G-h2ilIhp2GeWVuM
+###
 POST {{url}}/auth/reset-password
-Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-    "newPassword": "newpassword123",
-    "confirmPassword": "newpassword123",
-    "token":"{{RefreshToken}}"
+    "newPassword": "newpassword12",
+    "confirmPassword": "newpassword12",
+    "token":"{{ResetToken}}"
 }
 
 ###
 POST {{url}}/auth/forgot-password
-Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {

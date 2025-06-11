@@ -24,10 +24,14 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AtGuard } from './auth/guards/at.guard';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { MpesaModule } from './mpesa/mpesa.module';
+import { ClaimsAuthModule } from './claims-auth/claims-auth.module';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    // AdminsModule,
+
     UsersModule,
     GuestUsersModule,
     VehicleBrandsModule,
@@ -61,20 +65,22 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     }),
     AuthModule,
     ThrottlerModule.forRootAsync({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory:(configService: ConfigService) => [
+      useFactory: (configService: ConfigService) => [
         {
-          ttl: configService.getOrThrow<number>('THROTTLE_TTL', { infer: true }),
-          limit: configService.getOrThrow<number>('THROTTLE_LIMIT', { infer: true }),
-          ignoreUserAgents:[
-            /^curl\//,
-            /^PostmanRuntime\//,
-          ]
-        }
-      ]
-    
+          ttl: configService.getOrThrow<number>('THROTTLE_TTL', {
+            infer: true,
+          }),
+          limit: configService.getOrThrow<number>('THROTTLE_LIMIT', {
+            infer: true,
+          }),
+          ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
+        },
+      ],
     }),
+    MpesaModule,
+    ClaimsAuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -88,9 +94,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       useClass: CacheInterceptor,
     },
     {
-      provide:APP_GUARD,
-      useClass:ThrottlerGuard
-    }
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {

@@ -7,11 +7,13 @@ import { Vehicle } from './entities/vehicle.entity';
 import { VehicleBrand } from 'src/vehicle_brands/entities/vehicle_brand.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { Rating } from 'src/ratings/entities/rating.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([Vehicle, VehicleBrand, Booking, Rating]),
+    UsersModule,
   ],
   controllers: [VehiclesController],
   providers: [VehiclesService],

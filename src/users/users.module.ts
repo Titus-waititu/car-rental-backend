@@ -26,5 +26,6 @@ import { Subscriber } from 'src/subscribers/entities/subscriber.entity';
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [TypeOrmModule],
 })
 export class UsersModule {}

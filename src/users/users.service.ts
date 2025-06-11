@@ -52,14 +52,34 @@ export class UsersService {
 
   async findAll(search?: string): Promise<Partial<User[] | string>> {
     if (search) {
-     const cleanSearch = search?.toLocaleLowerCase().trim();
-      const users  = await this.usersRepository.find({
+      const cleanSearch = search?.toLocaleLowerCase().trim();
+      const users = await this.usersRepository.find({
         where: [
           { first_name: ILike(`%${cleanSearch}%`) },
           { last_name: ILike(`%${cleanSearch}%`) },
           { email: ILike(`%${cleanSearch}%`) },
         ],
-      })
+        select: [
+          'user_id',
+          'first_name',
+          'last_name',
+          'email',
+          'last_login',
+          'phone_number',
+          'profile_picture',
+          'role',
+          'status',
+        ],
+        order: { user_id: 'ASC' },
+        relations: {
+          subscribers: true,
+          bookings: true,
+          ratings: true,
+          testimonials: true,
+          contactus: true,
+          payments: true,
+        },
+      });
       if (users.length === 0) {
         return `No users found matching the search term "${search}".`;
       }
@@ -76,6 +96,17 @@ export class UsersService {
           contactus: true,
           payments: true,
         },
+        select: [
+          'user_id',
+          'first_name',
+          'last_name',
+          'email',
+          'last_login',
+          'phone_number',
+          'profile_picture',
+          'role',
+          'status',
+        ],
       })
       .then((users) => {
         if (users.length === 0) {
@@ -93,14 +124,26 @@ export class UsersService {
     return await this.usersRepository
       .findOne({
         where: { user_id: id },
-        relations: [
-          'subscribers',
-          'bookings',
-          'ratings',
-          'testimonials',
-          'contactus',
-          'payments',
+        select: [
+          'user_id',
+          'first_name',
+          'last_name',
+          'email',
+          'last_login',
+          'phone_number',
+          'profile_picture',
+          'role',
+          'status',
         ],
+        order: { user_id: 'ASC' },
+        relations: {
+          subscribers: true,
+          bookings: true,
+          ratings: true,
+          testimonials: true,
+          contactus: true,
+          payments: true,
+        },
       })
       .then((user) => {
         if (!user) {

@@ -1,5 +1,3 @@
-import { Booking } from 'src/bookings/entities/booking.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
@@ -9,11 +7,13 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { Booking } from 'src/bookings/entities/booking.entity';
+import { User } from 'src/users/entities/user.entity';
 
 export enum PaymentStatus {
-  Pending = 'Pending',
-  Completed = 'Completed',
-  Failed = 'Failed',
+  PENDING = 'Pending',
+  COMPLETED = 'Completed',
+  FAILED = 'Failed',
 }
 
 export enum PaymentMethod {
@@ -24,7 +24,7 @@ export enum PaymentMethod {
   MPesa = 'MPesa',
 }
 
-@Entity()
+@Entity('payments')
 export class Payment {
   @PrimaryGeneratedColumn()
   payment_id: number;
@@ -39,11 +39,36 @@ export class Payment {
   })
   payment_method: PaymentMethod;
 
-  @Column()
-  transactionId: number;
+  @Column({ nullable: true })
+  merchantRequestId: string;
 
-  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.Pending })
-  payment_status: PaymentStatus;
+  @Column({ nullable: true })
+  checkoutRequestId: string;
+
+  @Column({ nullable: true })
+  resultCode: string;
+
+  @Column({ nullable: true })
+  resultDesc: string;
+
+  @Column({ nullable: true })
+  mpesaReceiptNumber: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable: true })
+  balance: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  transactionDate: Date;
+
+  @Column({ nullable: true })
+  phoneNumber: string;
+
+  @Column({
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
+  })
+  status: PaymentStatus;
 
   @Column({
     type: 'timestamp',
@@ -52,7 +77,9 @@ export class Payment {
   })
   payment_date: Date;
 
-  @OneToOne(() => Booking, (book) => book.payment, { onDelete: 'CASCADE' })
+  @OneToOne(() => Booking, (booking) => booking.payment, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   booking: Relation<Booking>;
 

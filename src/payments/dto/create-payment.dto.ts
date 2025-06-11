@@ -1,19 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsDateString, IsEnum, IsOptional } from 'class-validator';
-
-export enum PaymentStatus {
-  Pending = 'Pending',
-  Completed = 'Completed',
-  Failed = 'Failed',
-}
-
-export enum PaymentMethod {
-  CreditCard = 'Credit Card',
-  PayPal = 'PayPal',
-  BankTransfer = 'Bank Transfer',
-  Cash = 'Cash',
-  MPesa = 'MPesa',
-}
+import { IsNumber, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { PaymentMethod, PaymentStatus } from 'src/payments/entities/payment.entity';
 
 export class CreatePaymentDto {
   @ApiProperty({
@@ -23,49 +10,60 @@ export class CreatePaymentDto {
   @IsNumber()
   userId: number;
 
-  @IsNumber()
   @ApiProperty({
     description: 'The ID of the booking associated with the payment',
     example: 123,
   })
+  @IsNumber()
   bookingId: number;
 
-  @IsEnum(PaymentMethod)
   @ApiProperty({
     description: 'The method of payment used',
     enum: PaymentMethod,
-    example: PaymentMethod.CreditCard,
+    example: PaymentMethod.MPesa,
   })
+  @IsEnum(PaymentMethod)
   payment_method: PaymentMethod;
 
-  @IsNumber()
-  @ApiProperty({
-    description: 'The unique transaction ID for the payment',
-    example: 456789,
-  })
-  transactionId: number;
-
-  @IsNumber()
   @ApiProperty({
     description: 'The amount paid in the transaction',
     example: 150.0,
   })
+  @IsNumber()
   amount: number;
 
-  @IsEnum(PaymentStatus)
   @ApiProperty({
     description: 'The status of the payment',
     enum: PaymentStatus,
-    example: PaymentStatus.Completed,
+    example: PaymentStatus.COMPLETED,
   })
-  payment_status: PaymentStatus;
+  @IsEnum(PaymentStatus)
+  status: PaymentStatus;
 
-  @IsDateString()
   @ApiProperty({
-    description: 'The date when the payment was made',
-    example: '2023-10-01T12:00:00Z',
+    description: 'Phone number used for payment (MPesa)',
+    example: '254712345678',
     required: false,
   })
   @IsOptional()
-  payment_date: Date;
+  @IsString()
+  phoneNumber?: string;
+
+  @ApiProperty({
+    description: 'MPesa Receipt Number if applicable',
+    example: 'QWE1234567',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  mpesaReceiptNumber?: string;
+
+  @ApiProperty({
+    description: 'Date and time when the payment was made',
+    example: '2024-10-01T12:00:00Z',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  transactionDate?: Date;
 }
