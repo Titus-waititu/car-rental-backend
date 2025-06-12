@@ -21,6 +21,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           autoLoadEntities: true,
           synchronize: configService.getOrThrow<boolean>('DB_SYNC', true),
           logging: configService.getOrThrow<boolean>('DB_LOGGING', false),
+          ssl: {
+            rejectUnauthorized: false, // Important for Neon
+          },
         };
       },
       inject: [ConfigService],

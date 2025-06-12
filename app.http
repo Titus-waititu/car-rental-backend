@@ -1,12 +1,49 @@
-@url = http://localhost:8000/api/v1
+@url = http://localhost:8000/api
 
 ### Root
-@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjY1NDksImV4cCI6MTc0OTY2OTU0OX0.N2LxDyqHVCugXK27y2D77I8GHJQYnwQXu3fNc7ptFoI
+@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk3MTU4NjYsImV4cCI6MTc0OTcxODg2Nn0.5I1nAZaHjWj7F95cqo4D0PgqdMu23VG7DWjp7S-cBPY
 @RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjA4OTUsImV4cCI6MTc1MDI2NTY5NX0.5JJbKDhBb0L9Tt_EPPw4wyIyh9CCmbdBPDjPaRx2hew
 
 ###
+### LOGIN a new user
+POST {{url}}/auth/signin
+Content-Type: application/json
 
-GET {{url}}/payments
+{
+  "email": "andreastailas96@gmail.com",
+  "password": "newpassword12"
+}
+
+###
+POST {{url}}/auth/signin
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "newpassword12"
+}
+
+###
+@ResetToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDk3MTYzNTksImV4cCI6MTc0OTcxOTk1OX0.W8urfZn8T4OZWLn_oxCd51NMaLak8r-DnRJSYZ-JrvM
+###
+POST {{url}}/auth/reset-password
+Content-Type: application/json
+
+{
+    "newPassword": "newpassword12",
+    "confirmPassword": "newpassword12",
+    "token":"{{ResetToken}}"
+}
+
+###
+POST {{url}}/auth/forgot-password
+Content-Type: application/json
+
+{
+    "email": "user@example.com"
+}
+###
+GET {{url}}/users
 Authorization: Bearer {{AccessToken}}
 ###
 POST {{url}}/payments/stkpush
@@ -44,8 +81,8 @@ Content-Type: application/json
     
     "password": "testpass",
     "email": "user@example.com",
-    "first_name": "John",
-    "last_name": "Doe",
+    "first_name": "Callum",
+    "last_name": "Hudson",
     "status": "active",
     "phone_number": "1234567890",
     "profile_picture": "http://example.com/profile.jpg"
@@ -97,34 +134,7 @@ DELETE {{url}}/users/1
 
 ###
 
-### LOGIN a new user
-POST {{url}}/auth/signin
-Content-Type: application/json
 
-{
-  "email": "andreastailas96@gmail.com",
-  "password": "newpassword12"
-}
-
-###
-@ResetToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk2MjU2MzcsImV4cCI6MTc0OTYyOTIzN30.sdmKrwKqTLgPvttx7hzMDt-p_r-G-h2ilIhp2GeWVuM
-###
-POST {{url}}/auth/reset-password
-Content-Type: application/json
-
-{
-    "newPassword": "newpassword12",
-    "confirmPassword": "newpassword12",
-    "token":"{{ResetToken}}"
-}
-
-###
-POST {{url}}/auth/forgot-password
-Content-Type: application/json
-
-{
-    "email": "andreastailas96@gmail.com"
-}
 ###
 GET {{url}}/users
 Authorization: Bearer {{AccessToken}}

@@ -25,7 +25,7 @@ export class VehicleBrandsController {
   constructor(private readonly vehicleBrandsService: VehicleBrandsService) {}
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN)
   create(@Body() createVehicleBrandDto: CreateVehicleBrandDto) {
     return this.vehicleBrandsService.create(createVehicleBrandDto);
   }

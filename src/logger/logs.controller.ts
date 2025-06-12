@@ -1,10 +1,10 @@
 import { Controller, Get, Delete } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController } from '@nestjs/swagger';
 
 @Public()
-@ApiTags('logs')
+@ApiExcludeController()
 @Controller('logs')
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}
