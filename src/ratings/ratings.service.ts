@@ -6,6 +6,7 @@ import { Rating } from './entities/rating.entity';
 import { Repository } from 'typeorm';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
 import { User } from 'src/users/entities/user.entity';
+import { sanitizeUser } from 'src/users/sanitize-user.util';
 
 @Injectable()
 export class RatingsService {
@@ -59,7 +60,13 @@ export class RatingsService {
         if (ratings.length === 0) {
           return 'No ratings found.';
         }
-        return ratings;
+        // Sanitize user objects
+        return ratings.map((rating) => {
+          if (rating.user) {
+            rating.user = sanitizeUser(rating.user) as User;
+          }
+          return rating;
+        });
       })
       .catch((error) => {
         console.error('Error retrieving ratings:', error);
@@ -80,6 +87,10 @@ export class RatingsService {
       .then((rating) => {
         if (!rating) {
           return `Rating with ID ${id} not found.`;
+        }
+        // Sanitize user object
+        if (rating.user) {
+          rating.user = sanitizeUser(rating.user) as User;
         }
         return rating;
       })

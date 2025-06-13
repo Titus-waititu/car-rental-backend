@@ -6,6 +6,7 @@ import { Booking } from './entities/booking.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+import { sanitizeUser } from 'src/users/sanitize-user.util';
 
 @Injectable()
 export class BookingsService {
@@ -42,40 +43,21 @@ export class BookingsService {
       });
   }
 
-  async findAll(string?: string): Promise<Booking[] | string> {
-    if (string) {
-      return await this.bookingRepository.find({
-        order: {
-          booking_id: 'ASC',
-        },
-        relations: {
-          user: true,
-          vehicle: true,
-          payment: true,
-        },
-      });
+  async findAll(): Promise<Booking[] | string> {
+    const bookings = await this.bookingRepository.find({
+      order: { booking_id: 'ASC' },
+      relations: { user: true, vehicle: true, payment: true },
+    });
+    if (bookings.length === 0) {
+      return 'No bookings found';
     }
-    return await this.bookingRepository
-      .find({
-        order: {
-          booking_id: 'ASC',
-        },
-        relations: {
-          user: true,
-          vehicle: true,
-          payment: true,
-        },
-      })
-      .then((bookings) => {
-        if (bookings.length === 0) {
-          return 'No bookings found';
-        }
-        return bookings;
-      })
-      .catch((error) => {
-        console.error('Error fetching bookings:', error);
-        throw new Error('Failed to fetch bookings');
-      });
+    // Remove sensitive fields from user
+    return bookings.map((booking) => {
+      if (booking.user) {
+       booking.user = sanitizeUser(booking.user) as User;
+      }
+      return booking;
+    });
   }
 
   async findOne(booking_id: number): Promise<Booking> {
@@ -84,11 +66,13 @@ export class BookingsService {
         where: { booking_id },
         relations: ['user', 'vehicle', 'payment'],
       });
-
       if (!booking) {
         throw new Error(`Booking with ID ${booking_id} not found`);
       }
-
+      // Remove sensitive fields from user
+      if (booking.user) {
+        booking.user = sanitizeUser(booking.user) as User;
+      }
       return booking;
     } catch (error: unknown) {
       console.error('Error fetching booking:', error);

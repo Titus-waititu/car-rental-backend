@@ -1,7 +1,7 @@
 @url = http://localhost:8000/api
 
 ### Root
-@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk3MTU4NjYsImV4cCI6MTc0OTcxODg2Nn0.5I1nAZaHjWj7F95cqo4D0PgqdMu23VG7DWjp7S-cBPY
+@AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk4MzE3MDYsImV4cCI6MTc0OTgzNDcwNn0.3L8NdhR0x_zfg8A-DYZLUfd00fYJmfsiYfN5r-8uE1A
 @RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NjA4OTUsImV4cCI6MTc1MDI2NTY5NX0.5JJbKDhBb0L9Tt_EPPw4wyIyh9CCmbdBPDjPaRx2hew
 
 ###
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ###
-@ResetToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDk3MTYzNTksImV4cCI6MTc0OTcxOTk1OX0.W8urfZn8T4OZWLn_oxCd51NMaLak8r-DnRJSYZ-JrvM
+@ResetToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJpYXQiOjE3NDk3OTczODksImV4cCI6MTc0OTgwMDk4OX0.SW3lmtqEQUKtk5KyVN8zu7thhZUJzsdtmSoOiLrpmGI
 ###
 POST {{url}}/auth/reset-password
 Content-Type: application/json
@@ -40,10 +40,10 @@ POST {{url}}/auth/forgot-password
 Content-Type: application/json
 
 {
-    "email": "user@example.com"
+    "email": "andreastailas96@gmail.com"
 }
 ###
-GET {{url}}/users
+GET {{url}}/subscribers
 Authorization: Bearer {{AccessToken}}
 ###
 POST {{url}}/payments/stkpush

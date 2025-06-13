@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Testimonial } from './entities/testimonial.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { sanitizeUser } from 'src/users/sanitize-user.util';
 
 @Injectable()
 export class TestimonialsService {
@@ -49,7 +50,13 @@ export class TestimonialsService {
         if (testimonials.length === 0) {
           return 'No testimonials found.';
         }
-        return testimonials;
+        // Sanitize user objects
+        return testimonials.map((testimonial) => {
+          if (testimonial.user) {
+            testimonial.user = sanitizeUser(testimonial.user) as User;
+          }
+          return testimonial;
+        });
       })
       .catch((error) => {
         console.error('Error retrieving testimonials:', error);
@@ -68,6 +75,10 @@ export class TestimonialsService {
       .then((testimonial) => {
         if (!testimonial) {
           return `Testimonial with ID ${id} not found.`;
+        }
+        // Sanitize user object
+        if (testimonial.user) {
+          testimonial.user = sanitizeUser(testimonial.user) as User;
         }
         return testimonial;
       })

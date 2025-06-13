@@ -6,6 +6,7 @@ import { Subscriber } from './entities/subscriber.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { GuestUser } from 'src/guest_users/entities/guest_user.entity';
+import { sanitizeUser } from 'src/users/sanitize-user.util';
 
 @Injectable()
 export class SubscribersService {
@@ -61,7 +62,13 @@ export class SubscribersService {
         if (subscribers.length === 0) {
           return 'No subscribers found.';
         }
-        return subscribers;
+        // Sanitize user objects
+        return subscribers.map((subscriber) => {
+          if (subscriber.user) {
+            subscriber.user = sanitizeUser(subscriber.user) as User;
+          }
+          return subscriber;
+        });
       })
       .catch((error) => {
         console.error('Error retrieving subscribers:', error);
@@ -82,6 +89,10 @@ export class SubscribersService {
       .then((subscriber) => {
         if (!subscriber) {
           return `Subscriber with ID ${id} not found.`;
+        }
+        // Sanitize user object
+        if (subscriber.user) {
+          subscriber.user = sanitizeUser(subscriber.user) as User;
         }
         return subscriber;
       })

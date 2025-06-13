@@ -22,24 +22,23 @@ import { UserRole } from 'src/users/entities/user.entity';
 import { CheckPolicies } from 'src/claims-auth/decorators/check-policies.decorator';
 import { Actions } from 'src/claims-auth/action.enum';
 import { PoliciesGuard } from 'src/claims-auth/guards/policies.guard';
-import { CreateMpesaDto } from './dto/create-mpesa.dto';
 
-interface STKCallback {
-  Body: {
-    stkCallback: {
-      MerchantRequestID: string;
-      CheckoutRequestID: string;
-      ResultCode: number;
-      ResultDesc: string;
-      CallbackMetadata?: {
-        Item: Array<{
-          Name: string;
-          Value: string | number;
-        }>;
-      };
-    };
-  };
-}
+// interface STKCallback {
+//   Body: {
+//     stkCallback: {
+//       MerchantRequestID: string;
+//       CheckoutRequestID: string;
+//       ResultCode: number;
+//       ResultDesc: string;
+//       CallbackMetadata?: {
+//         Item: Array<{
+//           Name: string;
+//           Value: string | number;
+//         }>;
+//       };
+//     };
+//   };
+// }
 
 @ApiBearerAuth()
 @UseGuards(RolesGuard)
@@ -84,34 +83,34 @@ export class PaymentsController {
     return this.paymentsService.remove(id);
   }
 
-  @Post('/stkpush')
-  async initiateSTKPush(@Body() createMpesaDto: CreateMpesaDto) {
-    try {
-      const result = await this.paymentsService.stkPush(createMpesaDto);
-      return {
-        success: true,
-        data: result,
-      };
-    } catch (error) {
-      this.logger.error(`STK Push failed: ${error.message}`);
-      throw new HttpException(
-        'Failed to initiate payment',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  // @Post('/stkpush')
+  // async initiateSTKPush(@Body() createMpesaDto: CreateMpesaDto) {
+  //   try {
+  //     const result = await this.paymentsService.stkPush(createMpesaDto);
+  //     return {
+  //       success: true,
+  //       data: result,
+  //     };
+  //   } catch (error) {
+  //     this.logger.error(`STK Push failed: ${error.message}`);
+  //     throw new HttpException(
+  //       'Failed to initiate payment',
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 
-  @Post('/callback')
-  async handleSTKCallback(@Body() callback: STKCallback) {
-    try {
-      await this.paymentsService.processCallback(callback);
-      return { success: true, message: 'Callback processed' };
-    } catch (error) {
-      this.logger.error(`Callback handling failed: ${error.message}`);
-      throw new HttpException(
-        'Failed to process callback',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  // @Post('/callback')
+  // async handleSTKCallback(@Body() callback: STKCallback) {
+  //   try {
+  //     await this.paymentsService.processCallback(callback);
+  //     return { success: true, message: 'Callback processed' };
+  //   } catch (error) {
+  //     this.logger.error(`Callback handling failed: ${error.message}`);
+  //     throw new HttpException(
+  //       'Failed to process callback',
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 }
