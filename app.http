@@ -1,4 +1,4 @@
-@url = http://localhost:8000/api
+@url = https://car-rental-backend-cc00.onrender.com/api
 
 ### Root
 @AccessToken  =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6ImFuZHJlYXN0YWlsYXM5NkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTAwNTY0MTcsImV4cCI6MTc1MDA1OTQxN30.R0S_JV8qZ3JybfRFBVqXdKxTa9zsczt9BbEJSq2JHjw
